@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Patient's Discharge Pdf{% endblock %}
+
+{% block body %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Generate PDF File</title>
+    </head>
+
+    <a href="#">
+        <span style="font-size:25px"><b>Cardio</b>Care</span>
+    </a>
+    
+    <body>
+        <h3>{{ headline }}</h3>
+        <div>
+            <h4>Patient discharged at {{ "now"|date("H:i:s d/m/Y","+05:30") }}</h4> 
+            <h4>Patient's Fullname: {{ patient.pFirstName }} {{ patient.pLastName }}</h4>
+            <h4>Patient's Address: {{ patient.pAddress }}</h4>
+            <h4>Patient's Gender: {{ patient.pGender }}</h4>
+            <h4>Patient's Date of Birth: {{ patient.pDOB }}</h4>
+            <h4>Patient's Height: {{ patient.pHeight }}</h4>
+            <h4>Patient's Weight: {{ patient.pWeight }}</h4>
+            <h4>Patient's Mobile Number: {{ patient.pPhoneNumber }}</h4>
+            <h4>Patient's Emergency Contact Details: {{ patient.pEmergencyContactDetails }}</h4>
+            <h4>Patient's Medical History: {{ patient.pMedicalHistroy }}</h4>
+            <h4>Patient's Allergic History: {{ patient.pAllergicHistroy }}</h4>
+            <h4>Patient's Surgical History: {{ patient.pSurgicalHistroy }}</h4>
+            <h4>Patient's Drug History: {{ patient.pDrugHistroy }}</h4>
+            <h4>Patient's Social History: {{ patient.pSocialHistroy }}</h4>
+            <h4>Patient's Examination Details: {{ patient.pExaminationDetails }}</h4>
+        </div>
+    </body>
+</html>
+{% endblock %}

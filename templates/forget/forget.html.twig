@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Password Change{% endblock %}
+
+{% block body %}
+
+    <!-- Page Specifying Meta Data -->
+    {% include "meta_data.html.twig" %}
+
+    <!-- CSS Links -->
+    {% include "css.html.twig" %} 
+
+    <body class="hold-transition register-page">
+        <div class="register-box">
+            <div class="register-logo">
+                <a href="#"><b>Cardio</b>Care</a>
+            </div>
+
+            <!-- /.login-logo -->
+            <div class="card">
+                <div class="card-body login-card-body">               
+                    <p class="login-box-msg">Password Change</p>
+                            
+                    {{ form_start(form) }}
+
+                        {{ form_row(form.username) }}
+                        {{ form_row(form.plainPassword.first) }}
+                        {{ form_row(form.plainPassword.second) }}
+
+                        <div class="row">
+                            <div class="col-4 m-md-auto">
+                                <button type="button" class="btn btn-light btn-block" ><a href="/login">Cancel</a></button>
+                            </div>
+                            <div class="col-4 m-md-auto">
+                                <button type="submit" class="btn btn-primary btn-block" >Update</button>
+                            </div>
+                        </div>
+                                
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        <!-- /.login-box -->
+   </body>
+
+    <!-- Javascript Links -->
+    {% include "js.html.twig" %}
+
+{% endblock %}

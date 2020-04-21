@@ -1,0 +1,12 @@
+{% block body %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("a[title ~= 'BotDetect']").removeAttr("style");
+            $("a[title ~= 'BotDetect']").removeAttr("href");
+            $("a[title ~= 'BotDetect']").css('visibility', 'hidden'); 
+        });
+    </script>
+
+{% endblock %}

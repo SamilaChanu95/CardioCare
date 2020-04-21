@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+    <!-- Page Specifying Meta Data -->
+    {% include "meta_data.html.twig" %}
+        
+    <!-- CSS Links -->
+    {% include "css.html.twig" %}
+
+    <div>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('success-forget') %}
+            <div class="alert alert-success alert-dismissible">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <body class="hold-transition register-page">
+        <div class="register-box">
+            <div class="register-logo">
+                <a href="#"><b>Cardio</b>Care</a>
+            </div>
+
+            <!-- /.login-logo -->
+            <div class="card">
+                <div class="card-body login-card-body">
+                    <p class="login-box-msg">Login to start your session</p>
+
+                    <form  action= "{{ path('login') }}" method="POST">
+                        {% if error %}
+                        <span class="error">{{ error.messageKey }}</span>
+                        {% endif %}
+                        <div class="input-group mb-3">
+                            <input type="text" name="_username" value="{{ last_username }}" id="inputUsername" class="form-control" placeholder="Enter username" required autofocus>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                            </input>    
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" name="_password" id="inputPassword" class="form-control" placeholder="Enter password" required>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                            </input>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="icheck-primary">
+                                    <input type="checkbox" id="remember">
+                                        <label for="remember">
+                                            Remember Me
+                                        </label>
+                                    </input>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                            </div>
+                        <!-- /.col -->
+                        </div>
+                    </form>
+
+                    <div class="social-auth-links text-center mb-3">
+                        <p>- OR -</p>
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn btn-block btn-primary">
+                            <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+                        </a>
+                        <a href="#" class="btn btn-block btn-danger">
+                            <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+                        </a>
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'github' }) }}" class="btn btn-block btn-dark">
+                            <i class="fab fa-github mr-2"></i> Sign in using GitHub
+                        </a>
+                    </div>
+                    <!-- /.social-auth-links -->
+
+                    <p class="mb-1">
+                        <a href="/forget">I forgot my password</a>
+                    </p>
+                    <p class="mb-0">
+                        <a href="/register" class="text-center">Register a new membership</a>
+                    </p>
+                </div>
+                <!-- /.login-card-body -->
+            </div>
+        </div>
+        <!-- /.login-box -->
+    </body>
+
+    <!-- Javascript Links -->
+    {% include "js.html.twig" %}
+
+{% endblock %}
