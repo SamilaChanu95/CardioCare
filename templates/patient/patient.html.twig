@@ -177,32 +177,32 @@
 		
                     <section class="ftco-section">
                     {% if patients %}
-                        <div class="container">
-                        <div class="row">
-                            {% for patient in patients %}
-                            <div class="col-md-6 col-lg-3 ftco-animate">
-                                <div class="staff">
-                                <div class="img-wrap d-flex align-items-stretch">
-                                    <div class="img align-self-stretch" style="background-image: url({{ asset('images/staff-2.jpg') }});"></div>
-                                </div>
-                                <div class="text pt-3 text-center">
-                                    <h3><a href="/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h3>  
-                                    <span class="position mb-2">{{  patient.pAddress }}</span>
-                                    <div class="faded">
-                                    <p>{{  patient.getPatientType() }}</p>
-                                    <p>{{  patient.pPhoneNumber }}</p>
-                                    <ul class="ftco-social text-center">
-                                        <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-                                        <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-                                        <li class="ftco-animate"><a href="#"><span class="icon-google-plus"></span></a></li>
-                                        <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-                                    </ul>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>             
+                        <table class="table table-hover table-responsive table-avatar table-valign-middle">
+                            <thead>
+                                <tr class="table">
+                                    <th scope="col"><p>Patient Name</p></th>
+                                    <th scope="col"><p>Patient Type</p></th>
+                                    <th scope="col"><p>Patient Address</p></th>
+                                    <th scope="col"><p>Gender</p></th>
+                                    <th scope="col"><p>Date of Birth</p></th>
+                                    <th scope="col"><p>Phone Number</p></th>
+                                    <th scope="col"><p>Emergency Contact Details</p></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for patient in patients %}
+                                    <tr>
+                                        <td><h7><a href="/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
+                                        <td><p>{{ patient.getPatientType() }}</p></td>
+                                        <td><p>{{ patient.pAddress }}</p></td>
+                                        <td><p>{{ patient.pGender }}</p></td>
+                                        <td><p>{{ patient.pDOB }}</p></td>
+                                        <td><p>{{ patient.pPhoneNumber }}</p></td>
+                                        <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
+                                    </tr>
+                                {% endfor %}    
+                            </tbody>
+                        </table>              
                     {% else %}
                         <p align="center">No patients to display.</p>
                     {% endif %}
