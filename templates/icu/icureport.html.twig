@@ -20,40 +20,19 @@
                         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                     </li>
                     <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/clinic" class="nav-link">Clinic</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ward Addmission</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="/patient">Patients</a>
-                            <a class="dropdown-item" href="/doctor">Doctors</a>
-                            <a class="dropdown-item" href="/nurse">Nurses</a>
-                            <a class="dropdown-item" href="/consultant">Consultants</a>
-                            <a class="dropdown-item" href="/technician">Technicians</a>
-						</div>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/icu" class="nav-link active">ICU</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/surgery" class="nav-link">Surgery</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/discharge" class="nav-link">Discharge</a>
+                        <a href="/" class="nav-link" style="font-size: 17px;">Home</a>
                     </li>
                 </ul>
 
                 <!-- Search Form -->
                 {% include "search_form.html.twig" %}
         
-                <!-- Left navbar links -->
+                <!-- Right navbar links -->
                 {% include "navbar_link_logout.html.twig" %}
 
             </nav>
             <!-- /.navbar -->
+
             <!-- Main Sidebar Container -->
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
@@ -82,49 +61,49 @@
                           <li class="nav-item has-treeview">
                               <a href="/" class="nav-link">
                               <i class="nav-icon fas fa-home"></i>
-                                  <p>Home</p>
+                                  <p style="font-size: 17px;">Home</p>
                               </a>
                           </li>
                           <li class="nav-item has-treeview">
                               <a href="/clinic" class="nav-link">
                                   <i class="nav-icon fas fa-stethoscope"></i>
-                                  <p>Clinic</p>
+                                  <p style="font-size: 17px;">Clinic</p>
                               </a>
                           </li>
                           <li class="nav-item has-treeview">
                               <a href="#" class="nav-link">
                                   <i class="nav-icon fas fa-clinic-medical"></i>
-                                  <p>Ward Addmission<i class="right fas fa-angle-left"></i></p>
+                                  <p style="font-size: 17px;">Ward Addmission<i class="right fas fa-angle-left"></i></p>
                               </a>
                               <ul class="nav nav-treeview">
                                   <li class="nav-item">
                                       <a href="/patient" class="nav-link">
                                       <i class="nav-icon fas fa-user-injured"></i>
-                                          <p>Patients</p>
+                                          <p style="font-size: 15px;">Patients</p>
                                       </a>
                                   </li>
                                   <li class="nav-item">
                                       <a href="/doctor" class="nav-link">
                                       <i class="nav-icon fas fa-user-md"></i>
-                                          <p>Doctors</p>
+                                          <p style="font-size: 15px;">Doctors</p>
                                       </a>
                                   </li>
                                   <li class="nav-item">
                                       <a href="/nurse" class="nav-link">
                                       <i class="nav-icon fas fa-user-nurse"></i>
-                                          <p>Nurses</p>
+                                          <p style="font-size: 15px;">Nurses</p>
                                       </a>
                                   </li>
                                   <li class="nav-item">
                                       <a href="/consultant" class="nav-link">
                                       <i class="nav-icon fas fa-user-tie"></i>
-                                          <p>Consultants</p>
+                                          <p style="font-size: 15px;">Consultants</p>
                                       </a>
                                   </li>
                                   <li class="nav-item">
                                       <a href="/technician" class="nav-link">
                                       <i class="nav-icon fas fa-user"></i>
-                                          <p>Technicians</p>
+                                          <p style="font-size: 15px;">Technicians</p>
                                       </a>
                                   </li>
                               </ul>
@@ -132,19 +111,19 @@
                           <li class="nav-item has-treeview">
                               <a href="/icu" class="nav-link active">
                                   <i class="nav-icon fas fa-procedures"></i>
-                                  <p>ICU</p>
+                                  <p style="font-size: 17px;">ICU</p>
                               </a>
                           </li>
                           <li class="nav-item has-treeview">
                               <a href="/surgery" class="nav-link">
                                   <i class="nav-icon fas fa-syringe"></i>
-                                  <p>Surgery</p>
+                                  <p style="font-size: 17px;">Surgery</p>
                               </a>
                           </li>
                           <li class="nav-item has-treeview">
                               <a href="/discharge" class="nav-link">
                                   <i class="nav-icon far fa-plus-square"></i>
-                                  <p>Discharge</p>
+                                  <p style="font-size: 17px;">Discharge</p>
                               </a>   
                           </li>
                           <li class="nav-item has-treeview">
@@ -180,7 +159,7 @@
     
                     <section class="ftco-section">
                     {% if patients %}
-                        <table class="table table-hover table-responsive-sm table-avatar table-valign-middle">
+                        <table class="table table-hover table-avatar table-valign-middle table-head-fixed table-responsive-xl">
                             <thead>
                                 <tr class="table">
                                     <th scope="col"><p>Patient Name</p></th>

@@ -21,36 +21,14 @@
                         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                     </li>
                     <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/clinic" class="nav-link">Clinic</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto dropdown">
-                        <a href="#" class="nav-link active dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ward Addmission</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-						    <a class="dropdown-item active" href="/patient">Patients</a>
-                            <a class="dropdown-item" href="/doctor">Doctors</a>
-                            <a class="dropdown-item" href="/nurse">Nurses</a>
-                            <a class="dropdown-item" href="/consultant">Consultants</a>
-                            <a class="dropdown-item" href="/technician">Technicians</a>
-				        </div>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/icu" class="nav-link">ICU</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/surgery" class="nav-link">Surgery</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block col-auto">
-                        <a href="/discharge" class="nav-link">Discharge</a>
+                        <a href="/" class="nav-link" style="font-size: 17px;">Home</a>
                     </li>
                 </ul>
 
                 <!-- Search Form -->
                 {% include "search_form.html.twig" %}
         
-                <!-- Left navbar links -->
+                <!-- Right navbar links -->
                 {% include "navbar_link_logout.html.twig" %}
 
             </nav>
@@ -164,8 +142,8 @@
                 <div class="content-header">                 
                     {% include "page_header_nav.html.twig" %}
                     
-                <section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_22.jpg') }}');" data-stellar-background-ratio="0.5">
-                    <div class="overlay"></div>
+                    <section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_22.jpg') }}');" data-stellar-background-ratio="0.5">
+                        <div class="overlay"></div>
                         <div class="container">
                             <div class="row no-gutters slider-text align-items-center justify-content-center">
                                 <div class="col-md-9 ftco-animate text-center">
@@ -176,37 +154,37 @@
                     </section>
 		
                     <section class="ftco-section">
-                    {% if patients %}
-                        <table class="table table-hover table-responsive table-avatar table-valign-middle">
-                            <thead>
-                                <tr class="table">
-                                    <th scope="col"><p>Patient Name</p></th>
-                                    <th scope="col"><p>Patient Type</p></th>
-                                    <th scope="col"><p>Patient Address</p></th>
-                                    <th scope="col"><p>Gender</p></th>
-                                    <th scope="col"><p>Date of Birth</p></th>
-                                    <th scope="col"><p>Phone Number</p></th>
-                                    <th scope="col"><p>Emergency Contact Details</p></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for patient in patients %}
-                                    <tr>
-                                        <td><h7><a href="/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
-                                        <td><p>{{ patient.getPatientType() }}</p></td>
-                                        <td><p>{{ patient.pAddress }}</p></td>
-                                        <td><p>{{ patient.pGender }}</p></td>
-                                        <td><p>{{ patient.pDOB }}</p></td>
-                                        <td><p>{{ patient.pPhoneNumber }}</p></td>
-                                        <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
+                        {% if patients %}
+                            <table class="table table-hover table-avatar table-valign-middle table-head-fixed table-responsive-xl">
+                                <thead>
+                                    <tr class="table">
+                                        <th scope="col"><p>Patient Name</p></th>
+                                        <th scope="col"><p>Patient Type</p></th>
+                                        <th scope="col"><p>Patient Address</p></th>
+                                        <th scope="col"><p>Gender</p></th>
+                                        <th scope="col"><p>Date of Birth</p></th>
+                                        <th scope="col"><p>Phone Number</p></th>
+                                        <th scope="col"><p>Emergency Contact Details</p></th>
                                     </tr>
-                                {% endfor %}    
-                            </tbody>
-                        </table>              
-                    {% else %}
-                        <p align="center">No patients to display.</p>
-                    {% endif %}
-                        <p align="center" class="button-custom"><a href="patient/add" class="btn btn-secondary py-2 px-3">Add new Patient</a></p>
+                                </thead>
+                                <tbody>
+                                    {% for patient in patients %}
+                                        <tr>
+                                            <td><h7><a href="/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
+                                            <td><p>{{ patient.getPatientType() }}</p></td>
+                                            <td><p>{{ patient.pAddress }}</p></td>
+                                            <td><p>{{ patient.pGender }}</p></td>
+                                            <td><p>{{ patient.pDOB }}</p></td>
+                                            <td><p>{{ patient.pPhoneNumber }}</p></td>
+                                            <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
+                                        </tr>
+                                    {% endfor %}    
+                                </tbody>
+                            </table>              
+                        {% else %}
+                            <p align="center">No patients to display.</p>
+                        {% endif %}
+                            <p align="center" class="button-custom"><a href="patient/add" class="btn btn-secondary py-2 px-3">Add new Patient</a></p>
                     </section>
 
                     {% include "footer.html.twig" %}
