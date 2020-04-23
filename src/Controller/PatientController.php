@@ -109,7 +109,7 @@ class PatientController extends AbstractController
             ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
             ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
             ->add('PatientType', EntityType::class, array('class' => PatientType::class, 'required' => true,'label' => 'Patient Type','attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'active_user', 'Deactive' => 'deactive_user'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -177,7 +177,7 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => 'Patient Type',
                 'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'active_user', 'Deactive' => 'deactive_user'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -246,7 +246,7 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => 'Patient Type',
                 'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'active_user', 'Deactive' => 'deactive_user'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -315,7 +315,7 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => 'Patient Type',
                 'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'active_user', 'Deactive' => 'deactive_user'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -379,7 +379,7 @@ class PatientController extends AbstractController
             ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
             ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
             ->add('PatientType', EntityType::class, array('class' => PatientType::class, 'required' => true,'label' => 'Patient Type','attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'active_user', 'Deactive' => 'deactive_user'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -448,7 +448,7 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => 'Patient Type',
                 'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'active_user', 'Deactive' => 'deactive_user'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -517,7 +517,7 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => 'Patient Type',
                 'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'active_user', 'Deactive' => 'deactive_user'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -586,7 +586,7 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => 'Patient Type',
                 'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'active_user', 'Deactive' => 'deactive_user'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',

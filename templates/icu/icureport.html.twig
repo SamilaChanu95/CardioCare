@@ -173,20 +173,22 @@
                             <tbody>
                                 {% for patient in patients %}
                                     {% if patient.getPatientType() == "ICU Patient" %}
-                                    <tr>
-                                        <td><h7><a href="/icu/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
-                                        <td><p>{{ patient.pAddress }}</p></td>
-                                        <td><p>{{ patient.pGender }}</p></td>
-                                        <td><p>{{ patient.pDOB }}</p></td>
-                                        <td><p>{{ patient.pPhoneNumber }}</p></td>
-                                        <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
-                                    </tr>
+                                        {% if patient.getPStatus() == "Active" %} 
+                                            <tr>
+                                                <td><h7><a href="/icu/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
+                                                <td><p>{{ patient.pAddress }}</p></td>
+                                                <td><p>{{ patient.pGender }}</p></td>
+                                                <td><p>{{ patient.pDOB }}</p></td>
+                                                <td><p>{{ patient.pPhoneNumber }}</p></td>
+                                                <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
+                                            </tr>
+                                        {% endif %}    
                                     {% endif %}
-                                {% endfor %}    
+                                {% endfor %}   
                             </tbody>
-                        </table>              
+                        </table>
                     {% else %}
-                        <p align="center">No ICU patients to display.</p>
+                        <p align="center">No ICU patients to display.</p>               
                     {% endif %}
                         <p align="center" class="button-custom"><a href="/icu/patient/add" class="btn btn-secondary py-2 px-3">Add new ICU Patient</a></p>
                 </section>
