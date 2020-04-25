@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 
@@ -90,26 +91,27 @@ class PatientController extends AbstractController
         $patient = new Patient();
 
         $form = $this->createFormBuilder($patient)
-            ->add('pNIC', TextType::class, array('required' => true,'label' => 'NIC number of Patient','attr' => array('class' => 'form-control')))
-            ->add('pFirstName', TextType::class, array('required' => true,'label' => 'First Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pLastName', TextType::class, array('required' => true,'label' => 'Last Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pAddress', TextareaType::class, array('required' => true,'label' => 'Address of Patient','attr' => array('class' => 'form-control')))
-            ->add('pGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('pDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('pHeight', NumberType::class, array('required' => true,'label' => 'Height (cm)','attr' => array('class' => 'form-control')))
-            ->add('pWeight', NumberType::class, array('required' => true,'label' => 'Weight (kg)','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => 'Visiting Number','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => 'Emergency Contact Details', 'attr' => array('class' => 'form-control')))
-            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => 'Medical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => 'Allergic Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => 'Surgical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => 'Drug Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
-            ->add('PatientType', EntityType::class, array('class' => PatientType::class, 'required' => true,'label' => 'Patient Type','attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Patient')))
+            ->add('pFirstName', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Patient')))
+            ->add('pLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Patient')))
+            ->add('pAddress', TextareaType::class, array('required' => true, 'label' => false , 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Patient')))
+            ->add('pGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('pDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('pHeight', NumberType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Height (cm)')))
+            ->add('pWeight', NumberType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Weight (kg)')))
+            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
+            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Visiting Number')))
+            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Emergency Contact Details')))
+            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Medical Histroy')))
+            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Allergic Histroy')))
+            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Surgical Histroy')))
+            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Drug Histroy')))
+            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Social Histroy')))
+            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Examination Details')))
+            ->add('PatientType', EntityType::class, array('class' => PatientType::class, 'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
+            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'Current Location' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => ['Status' => [ 'Active' => 'Active', 'Deactive' => 'Deactive']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -149,35 +151,36 @@ class PatientController extends AbstractController
         $patient = new Patient();
 
         $form = $this->createFormBuilder($patient)
-            ->add('pNIC', TextType::class, array('required' => true,'label' => 'NIC number of Patient','attr' => array('class' => 'form-control')))
-            ->add('pFirstName', TextType::class, array('required' => true,'label' => 'First Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pLastName', TextType::class, array('required' => true,'label' => 'Last Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pAddress', TextareaType::class, array('required' => true,'label' => 'Address of Patient','attr' => array('class' => 'form-control')))
-            ->add('pGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('pDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('pHeight', NumberType::class, array('required' => true,'label' => 'Height (cm)','attr' => array('class' => 'form-control')))
-            ->add('pWeight', NumberType::class, array('required' => true,'label' => 'Weight (kg)','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => 'Visiting Number','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => 'Emergency Contact Details', 'attr' => array('class' => 'form-control')))
-            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => 'Medical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => 'Allergic Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => 'Surgical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => 'Drug Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
+            ->add('pNIC', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC number')))
+            ->add('pFirstName', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Patient')))
+            ->add('pLastName', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Patient')))
+            ->add('pAddress', TextareaType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Patient')))
+            ->add('pGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('pDOB', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('pHeight', NumberType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Height')))
+            ->add('pWeight', NumberType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Weight')))
+            ->add('pPhoneNumber', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
+            ->add('pVisitingNumber', IntegerType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Visiting Number')))
+            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Emergency Contact Details')))
+            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Medical Histroy')))
+            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Allergic Histroy')))
+            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Surgical Histroy')))
+            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Drug Histroy')))
+            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Social Histroy')))
+            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Examination Details')))
             ->add('PatientType', EntityType::class, array(
                 'class' => PatientType::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->andWhere('u.Type = :val')
-                        ->setParameter('val', "Surgical Patient");
+                        ->setParameter('val', "In Patient");
                 }, 
                 'required' => true,
-                'label' => 'Patient Type',
-                'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+                'label' => false,
+                'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
+            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -218,35 +221,36 @@ class PatientController extends AbstractController
         $patient = new Patient();
 
         $form = $this->createFormBuilder($patient)
-            ->add('pNIC', TextType::class, array('required' => true,'label' => 'NIC number of Patient','attr' => array('class' => 'form-control')))
-            ->add('pFirstName', TextType::class, array('required' => true,'label' => 'First Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pLastName', TextType::class, array('required' => true,'label' => 'Last Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pAddress', TextareaType::class, array('required' => true,'label' => 'Address of Patient','attr' => array('class' => 'form-control')))
-            ->add('pGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('pDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('pHeight', NumberType::class, array('required' => true,'label' => 'Height (cm)','attr' => array('class' => 'form-control')))
-            ->add('pWeight', NumberType::class, array('required' => true,'label' => 'Weight (kg)','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => 'Visiting Number','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => 'Emergency Contact Details', 'attr' => array('class' => 'form-control')))
-            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => 'Medical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => 'Allergic Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => 'Surgical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => 'Drug Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
+            ->add('pNIC', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC number')))
+            ->add('pFirstName', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Patient')))
+            ->add('pLastName', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Patient')))
+            ->add('pAddress', TextareaType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Patient')))
+            ->add('pGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('pDOB', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('pHeight', NumberType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Height (cm)')))
+            ->add('pWeight', NumberType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Weight (kg)')))
+            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control','placeholder' => 'Phone Number')))
+            ->add('pVisitingNumber', IntegerType::class, array('required' => true, 'label' => false,'attr' => array('class' => 'form-control', 'placeholder' => 'Visiting Number')))
+            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Emergency Contact Details')))
+            ->add('pMedicalHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Medical Histroy')))
+            ->add('pAllergicHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Allergic Histroy')))
+            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Surgical Histroy')))
+            ->add('pDrugHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Drug Histroy')))
+            ->add('pSocialHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Social Histroy')))
+            ->add('pExaminationDetails', TextareaType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Examination Details')))
             ->add('PatientType', EntityType::class, array(
                 'class' => PatientType::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->andWhere('u.Type = :val')
-                        ->setParameter('val', "ICU Patient");
+                        ->setParameter('val', "In Patient");
                 }, 
                 'required' => true,
-                'label' => 'Patient Type',
-                'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+                'label' => false,
+                'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
+            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Current Location')))    
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Status')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -287,35 +291,34 @@ class PatientController extends AbstractController
         $patient = new Patient();
 
         $form = $this->createFormBuilder($patient)
-            ->add('pNIC', TextType::class, array('required' => true,'label' => 'NIC number of Patient','attr' => array('class' => 'form-control')))
-            ->add('pFirstName', TextType::class, array('required' => true,'label' => 'First Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pLastName', TextType::class, array('required' => true,'label' => 'Last Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pAddress', TextareaType::class, array('required' => true,'label' => 'Address of Patient','attr' => array('class' => 'form-control')))
-            ->add('pGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('pDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('pHeight', NumberType::class, array('required' => true,'label' => 'Height (cm)','attr' => array('class' => 'form-control')))
-            ->add('pWeight', NumberType::class, array('required' => true,'label' => 'Weight (kg)','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => 'Visiting Number','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => 'Emergency Contact Details', 'attr' => array('class' => 'form-control')))
-            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => 'Medical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => 'Allergic Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => 'Surgical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => 'Drug Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
+            ->add('pNIC', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control', 'placeholder' => 'NIC number')))
+            ->add('pFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Patient')))
+            ->add('pLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Patient')))
+            ->add('pAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Patient')))
+            ->add('pGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('pDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('pHeight', NumberType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Height (cm)')))
+            ->add('pWeight', NumberType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Weight (kg)')))
+            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
+            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Visiting Number')))
+            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Emergency Contact Details')))
+            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Medical Histroy')))
+            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Allergic Histroy')))
+            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Surgical Histroy')))
+            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Drug Histroy')))
+            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Social Histroy')))
+            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Examination Details')))
             ->add('PatientType', EntityType::class, array(
                 'class' => PatientType::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->andWhere('u.Type = :val')
-                        ->setParameter('val', "Clinical Patient");
+                        ->setParameter('val', "Out Patient");
                 }, 
                 'required' => true,
-                'label' => 'Patient Type',
-                'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+                'label' => false,
+                'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -360,26 +363,28 @@ class PatientController extends AbstractController
         $patient = $this->getDoctrine()->getRepository(Patient::class)->find($id);
 
         $form = $this->createFormBuilder($patient)
-            ->add('pNIC', TextType::class, array('required' => true,'label' => 'NIC number of Patient','attr' => array('class' => 'form-control')))
-            ->add('pFirstName', TextType::class, array('required' => true,'label' => 'First Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pLastName', TextType::class, array('required' => true,'label' => 'Last Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pAddress', TextareaType::class, array('required' => true,'label' => 'Address of Patient','attr' => array('class' => 'form-control')))
-            ->add('pGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('pDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('pHeight', NumberType::class, array('required' => true,'label' => 'Height (cm)','attr' => array('class' => 'form-control')))
-            ->add('pWeight', NumberType::class, array('required' => true,'label' => 'Weight (kg)','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => 'Visiting Number','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => 'EmergencyContactDetails', 'attr' => array('class' => 'form-control')))
-            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => 'Medical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => 'Allergic Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => 'Surgical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => 'Drug Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
-            ->add('PatientType', EntityType::class, array('class' => PatientType::class, 'required' => true,'label' => 'Patient Type','attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+            ->add('pNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC number')))
+            ->add('pFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Patient')))
+            ->add('pLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Patient')))
+            ->add('pAddress', TextareaType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Patient')))
+            ->add('pGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('pDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('pHeight', NumberType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Height (cm)')))
+            ->add('pWeight', NumberType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Weight (kg)')))
+            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
+            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Visiting Number')))
+            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' =>'Phone Number')))
+            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'EmergencyContactDetails')))
+            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Medical Histroy')))
+            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Allergic Histroy')))
+            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Surgical Histroy')))
+            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Drug Histroy')))
+            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Social Histroy')))
+            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Examination Details')))
+            ->add('PatientType', EntityType::class, array('class' => PatientType::class, 'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
+            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -420,35 +425,36 @@ class PatientController extends AbstractController
         $patient = $this->getDoctrine()->getRepository(Patient::class)->find($id);
 
         $form = $this->createFormBuilder($patient)
-            ->add('pNIC', TextType::class, array('required' => true,'label' => 'NIC number of Patient','attr' => array('class' => 'form-control')))
-            ->add('pFirstName', TextType::class, array('required' => true,'label' => 'First Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pLastName', TextType::class, array('required' => true,'label' => 'Last Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pAddress', TextareaType::class, array('required' => true,'label' => 'Address of Patient','attr' => array('class' => 'form-control')))
-            ->add('pGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('pDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('pHeight', NumberType::class, array('required' => true,'label' => 'Height (cm)','attr' => array('class' => 'form-control')))
-            ->add('pWeight', NumberType::class, array('required' => true,'label' => 'Weight (kg)','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => 'Visiting Number','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => 'EmergencyContactDetails', 'attr' => array('class' => 'form-control')))
-            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => 'Medical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => 'Allergic Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => 'Surgical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => 'Drug Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
+            ->add('pNIC', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC number')))
+            ->add('pFirstName', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Patient')))
+            ->add('pLastName', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Patient')))
+            ->add('pAddress', TextareaType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Patient')))
+            ->add('pGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('pDOB', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('pHeight', NumberType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Height')))
+            ->add('pWeight', NumberType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Weight')))
+            ->add('pPhoneNumber', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
+            ->add('pVisitingNumber', IntegerType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Visiting Number')))
+            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Emergency Contact Details')))
+            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Medical Histroy')))
+            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Allergic Histroy')))
+            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Surgical Histroy')))
+            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Drug Histroy')))
+            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Social Histroy')))
+            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Examination Details')))
             ->add('PatientType', EntityType::class, array(
                 'class' => PatientType::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->andWhere('u.Type = :val')
-                        ->setParameter('val', "Surgical Patient");
+                        ->setParameter('val', "In Patient");
                 }, 
                 'required' => true,
-                'label' => 'Patient Type',
-                'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+                'label' => false,
+                'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
+            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))    
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -489,35 +495,36 @@ class PatientController extends AbstractController
         $patient = $this->getDoctrine()->getRepository(Patient::class)->find($id);
 
         $form = $this->createFormBuilder($patient)
-            ->add('pNIC', TextType::class, array('required' => true,'label' => 'NIC number of Patient','attr' => array('class' => 'form-control')))
-            ->add('pFirstName', TextType::class, array('required' => true,'label' => 'First Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pLastName', TextType::class, array('required' => true,'label' => 'Last Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pAddress', TextareaType::class, array('required' => true,'label' => 'Address of Patient','attr' => array('class' => 'form-control')))
-            ->add('pGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('pDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('pHeight', NumberType::class, array('required' => true,'label' => 'Height (cm)','attr' => array('class' => 'form-control')))
-            ->add('pWeight', NumberType::class, array('required' => true,'label' => 'Weight (kg)','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => 'Visiting Number','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => 'EmergencyContactDetails', 'attr' => array('class' => 'form-control')))
-            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => 'Medical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => 'Allergic Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => 'Surgical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => 'Drug Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
+            ->add('pNIC', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC number')))
+            ->add('pFirstName', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Patient')))
+            ->add('pLastName', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Patient')))
+            ->add('pAddress', TextareaType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Patient')))
+            ->add('pGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('pDOB', TextType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('pHeight', NumberType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Height (cm)')))
+            ->add('pWeight', NumberType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Weight (kg)')))
+            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control','placeholder' => 'Phone Number')))
+            ->add('pVisitingNumber', IntegerType::class, array('required' => true, 'label' => false,'attr' => array('class' => 'form-control', 'placeholder' => 'Visiting Number')))
+            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Emergency Contact Details')))
+            ->add('pMedicalHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Medical Histroy')))
+            ->add('pAllergicHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Allergic Histroy')))
+            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Surgical Histroy')))
+            ->add('pDrugHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Drug Histroy')))
+            ->add('pSocialHistroy', TextareaType::class, array('required' => false, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Social Histroy')))
+            ->add('pExaminationDetails', TextareaType::class, array('required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Examination Details')))
             ->add('PatientType', EntityType::class, array(
                 'class' => PatientType::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->andWhere('u.Type = :val')
-                        ->setParameter('val', "ICU Patient");
+                        ->setParameter('val', "In Patient");
                 }, 
                 'required' => true,
-                'label' => 'Patient Type',
-                'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+                'label' => false,
+                'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
+            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -558,35 +565,34 @@ class PatientController extends AbstractController
         $patient = $this->getDoctrine()->getRepository(Patient::class)->find($id);
 
         $form = $this->createFormBuilder($patient)
-            ->add('pNIC', TextType::class, array('required' => true,'label' => 'NIC number of Patient','attr' => array('class' => 'form-control')))
-            ->add('pFirstName', TextType::class, array('required' => true,'label' => 'First Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pLastName', TextType::class, array('required' => true,'label' => 'Last Name of Patient','attr' => array('class' => 'form-control')))
-            ->add('pAddress', TextareaType::class, array('required' => true,'label' => 'Address of Patient','attr' => array('class' => 'form-control')))
-            ->add('pGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('pDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('pHeight', NumberType::class, array('required' => true,'label' => 'Height (cm)','attr' => array('class' => 'form-control')))
-            ->add('pWeight', NumberType::class, array('required' => true,'label' => 'Weight (kg)','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => 'Visiting Number','attr' => array('class' => 'form-control')))
-            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => 'EmergencyContactDetails', 'attr' => array('class' => 'form-control')))
-            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => 'Medical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => 'Allergic Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => 'Surgical Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => 'Drug Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => 'Social Histroy', 'attr' => array('class' => 'form-control')))
-            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => 'Examination Details', 'attr' => array('class' => 'form-control')))
+            ->add('pNIC', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control', 'placeholder' => 'NIC number')))
+            ->add('pFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Patient')))
+            ->add('pLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Patient')))
+            ->add('pAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Patient')))
+            ->add('pGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('pDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('pHeight', NumberType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Height (cm)')))
+            ->add('pWeight', NumberType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Weight (kg)')))
+            ->add('pPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
+            ->add('pVisitingNumber', IntegerType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Visiting Number')))
+            ->add('pEmergencyContactDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Emergency Contact Details')))
+            ->add('pMedicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Medical Histroy')))
+            ->add('pAllergicHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Allergic Histroy')))
+            ->add('pSurgicalHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Surgical Histroy')))
+            ->add('pDrugHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Drug Histroy')))
+            ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Social Histroy')))
+            ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Examination Details')))
             ->add('PatientType', EntityType::class, array(
                 'class' => PatientType::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->andWhere('u.Type = :val')
-                        ->setParameter('val', "Clinical Patient");
+                        ->setParameter('val', "Out Patient");
                 }, 
                 'required' => true,
-                'label' => 'Patient Type',
-                'attr' => array('class' => 'form-control')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => 'Status', 'attr' => array('class' => 'form-control')))
+                'label' => false,
+                'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',

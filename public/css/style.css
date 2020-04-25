@@ -458,6 +458,11 @@ pre {
     .container {
       max-width: 1140px; } }
 
+.container1 {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px; }
+
 .container-fluid {
   width: 100%;
   padding-right: 15px;

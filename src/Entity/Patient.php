@@ -104,6 +104,16 @@ class Patient
     private $pExaminationDetails;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $pSurgeryInfo;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $pCurrentLocation;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $pStatus;
@@ -346,6 +356,11 @@ class Patient
         return $this;
     }
 
+    public function getPSurgeryInfo()
+    {
+        return (boolean)$this->pSurgeryInfo;
+    }
+
     public function getPExaminationDetails(): ?string
     {
         return $this->pExaminationDetails;
@@ -354,6 +369,18 @@ class Patient
     public function setPExaminationDetails(string $pExaminationDetails): self
     {
         $this->pExaminationDetails = $pExaminationDetails;
+
+        return $this;
+    }
+
+    public function getPCurrentLocation(): ?string
+    {
+        return $this->pCurrentLocation;
+    }
+
+    public function setPCurrentLocation(string $pCurrentLocation): self
+    {
+        $this->pCurrentLocations = $pCurrentLocation;
 
         return $this;
     }
