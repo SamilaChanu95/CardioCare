@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
@@ -43,17 +44,17 @@ class NurseController extends AbstractController
         $nurse = new Nurse();
 
         $form = $this->createFormBuilder($nurse)
-            ->add('nNIC', TextType::class, array('required' => true,'label' => 'NIC number of Nurse','attr' => array('class' => 'form-control')))
-            ->add('nFirstName', TextType::class, array('required' => true,'label' => 'First Name of Nurse','attr' => array('class' => 'form-control')))
-            ->add('nLastName', TextType::class, array('required' => true,'label' => 'Last Name of Nurse','attr' => array('class' => 'form-control')))
-            ->add('nAddress', TextareaType::class, array('required' => true,'label' => 'Address of Nurse','attr' => array('class' => 'form-control')))
-            ->add('nGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('nDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('nPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('nRole', TextType::class, array('required' => true,'label' => 'Role','attr' => array('class' => 'form-control')))
-            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => 'Department','attr' => array('class' => 'form-control')))
-            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => 'Unit','attr' => array('class' => 'form-control')))
-            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => 'Ward','attr' => array('class' => 'form-control')))
+            ->add('nNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Nurse')))
+            ->add('nFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Nurse')))
+            ->add('nLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Nurse')))
+            ->add('nAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Nurse')))
+            ->add('nGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('nDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('nPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
+            ->add('nRole', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control')))
+            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -93,17 +94,17 @@ class NurseController extends AbstractController
         $nurse = $this->getDoctrine()->getRepository(Nurse::class)->find($id);
 
         $form = $this->createFormBuilder($nurse)
-            ->add('nNIC', TextType::class, array('required' => true,'label' => 'NIC number of Nurse','attr' => array('class' => 'form-control')))
-            ->add('nFirstName', TextType::class, array('required' => true,'label' => 'First Name of Nurse','attr' => array('class' => 'form-control')))
-            ->add('nLastName', TextType::class, array('required' => true,'label' => 'Last Name of Nurse','attr' => array('class' => 'form-control')))
-            ->add('nAddress', TextareaType::class, array('required' => true,'label' => 'Address of Nurse','attr' => array('class' => 'form-control')))
-            ->add('nGender', TextType::class, array('required' => true,'label' => 'Male/Female','attr' => array('class' => 'form-control')))
-            ->add('nDOB', TextType::class, array('required' => true,'label' => 'Date of Birth','attr' => array('class' => 'form-control')))
-            ->add('nPhoneNumber', TextType::class, array('required' => true,'label' => 'Phone Number','attr' => array('class' => 'form-control')))
-            ->add('nRole', TextType::class, array('required' => true,'label' => 'Role','attr' => array('class' => 'form-control')))
-            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => 'Department','attr' => array('class' => 'form-control')))
-            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => 'Unit','attr' => array('class' => 'form-control')))
-            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => 'Ward','attr' => array('class' => 'form-control')))
+            ->add('nNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Nurse')))
+            ->add('nFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Nurse')))
+            ->add('nLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Nurse')))
+            ->add('nAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Nurse')))
+            ->add('nGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
+            ->add('nDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
+            ->add('nPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
+            ->add('nRole', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control')))
+            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
