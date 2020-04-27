@@ -76,6 +76,12 @@ class Consultant
     private $surgeries;
 
     protected $captchaCode;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ward", inversedBy="consultants")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Ward;
     
     public function getCaptchaCode()
     {
@@ -252,6 +258,18 @@ class Consultant
     public function __toString()
     {
         return $this->cFirstName;
+    }
+
+    public function getWard(): ?Ward
+    {
+        return $this->Ward;
+    }
+
+    public function setWard(?Ward $Ward): self
+    {
+        $this->Ward = $Ward;
+
+        return $this;
     }
 
 }

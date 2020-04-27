@@ -33,10 +33,22 @@ class Ward
      */
     private $doctors;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Consultant", mappedBy="Ward")
+     */
+    private $consultants;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Technician", mappedBy="Ward")
+     */
+    private $technicians;
+
     public function __construct()
     {
         $this->nurses = new ArrayCollection();
         $this->doctors = new ArrayCollection();
+        $this->consultants = new ArrayCollection();
+        $this->technicians = new ArrayCollection();
         
     }
 
@@ -122,6 +134,68 @@ class Ward
     public function __toString()
     {
         return $this->WardName;
+    }
+
+    /**
+     * @return Collection|Consultant[]
+     */
+    public function getConsultants(): Collection
+    {
+        return $this->consultants;
+    }
+
+    public function addConsultant(Consultant $consultant): self
+    {
+        if (!$this->consultants->contains($consultant)) {
+            $this->consultants[] = $consultant;
+            $consultant->setWard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConsultant(Consultant $consultant): self
+    {
+        if ($this->consultants->contains($consultant)) {
+            $this->consultants->removeElement($consultant);
+            // set the owning side to null (unless already changed)
+            if ($consultant->getWard() === $this) {
+                $consultant->setWard(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Technician[]
+     */
+    public function getTechnicians(): Collection
+    {
+        return $this->technicians;
+    }
+
+    public function addTechnician(Technician $technician): self
+    {
+        if (!$this->technicians->contains($technician)) {
+            $this->technicians[] = $technician;
+            $technician->setWard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTechnician(Technician $technician): self
+    {
+        if ($this->technicians->contains($technician)) {
+            $this->technicians->removeElement($technician);
+            // set the owning side to null (unless already changed)
+            if ($technician->getWard() === $this) {
+                $technician->setWard(null);
+            }
+        }
+
+        return $this;
     }
 
 }
