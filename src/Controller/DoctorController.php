@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
+use Symfony\Component\Validator\Constraints\File;
 
 class DoctorController extends AbstractController
 {
@@ -59,7 +60,7 @@ class DoctorController extends AbstractController
             ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            //->add('image', FileType::class, array('required' => false, 'mapped' => false, 'label' => 'Profile Image', 'data_class'=> null))
+            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -74,22 +75,26 @@ class DoctorController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
+        if($request->isMethod('POST') && $form->isSubmitted() && $form->isValid())
         {
-            //$file = $doctor->getImage();
-            //$fileName = md5(uniqid()).'.'.$file->guessExtension();
+            $file = $doctor->getPhoto();
+            $fileName = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move($this->getParameter('photos_directory'), $fileName); 
+            $doctor->setPhoto($fileName); 
+
             $entityManager = $this->getDoctrine()->getManager();
-            //$doctor->setImage($fileName);   
             $entityManager->persist($doctor);
             $entityManager->flush(); 
+
+            $this->addFlash('success', "User photo is successfully uploaded.");
 
             return $this->redirectToRoute('doctors_list');
         }
         
-
         return $this->render('doctor/doctor_add.html.twig', [
             'form' => $form->createView()
         ]);
+        
     }
 
     /**

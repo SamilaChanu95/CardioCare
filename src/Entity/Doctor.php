@@ -83,6 +83,14 @@ class Doctor
      */
     private $surgeries;
 
+    /** 
+     * @ORM\Column(type="resource")
+     * 
+     * @Assert\NotBlank(message="Please, upload the photo.") 
+     * @Assert\File(mimeTypes={ "image/png" }) 
+     */ 
+    private $photo; 
+
     protected $captchaCode;
     
     public function getCaptchaCode()
@@ -268,6 +276,17 @@ class Doctor
 
         return $this;
     }
+
+    public function getPhoto() 
+    { 
+        return $this->photo; 
+    } 
+     
+    public function setPhoto($photo) 
+    { 
+        $this->photo = $photo; 
+        return $this; 
+    } 
 
     public function __toString()
     {

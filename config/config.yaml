@@ -1,0 +1,3 @@
+parameters: 
+    photos_directory: '%kernel.root_dir%/../web/uploads/photos'
+    
