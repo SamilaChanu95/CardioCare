@@ -90,12 +90,12 @@ class Patient
     private $pSurgicalHistroy;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true))
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $pDrugHistroy;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true))
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $pSocialHistroy;
 
@@ -105,7 +105,7 @@ class Patient
     private $pExaminationDetails;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,  nullable=true)
      */
     private $pCurrentLocation;
 
@@ -136,7 +136,7 @@ class Patient
     private $iCUs;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * 
      */
     private $brochureFilename;
