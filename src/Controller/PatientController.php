@@ -19,12 +19,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
+use Symfony\Component\Validator\Constraints\File;
 
 class PatientController extends AbstractController
 {
@@ -109,9 +111,21 @@ class PatientController extends AbstractController
             ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Social Histroy')))
             ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Examination Details')))
             ->add('PatientType', EntityType::class, array('class' => PatientType::class, 'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
-            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            //->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
             ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'Current Location' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control')))
             ->add('pStatus', ChoiceType::class, array('choices' => ['Status' => [ 'Active' => 'Active', 'Deactive' => 'Deactive']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control')))
+            ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -126,9 +140,23 @@ class PatientController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
+        if($form->isSubmitted())
         {
-            $patient = $form->getData();
+
+            $file = $form->get('brochureFilename')->getData();
+            $pdfs_directory = $this->getParameter('pdfs_directory');
+            $filename = md5(uniqid()) .'.'. $file->guessExtension();
+            $file->move(
+                $pdfs_directory,
+                $filename
+            );
+            $patient->setBrochureFilename($filename);
+
+            //echo "<pre>";
+            //var_dump($request); die;
+            //var_dump($file); die;
+
+            //$patient = $form->getData();
              
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($patient);
@@ -178,9 +206,21 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => false,
                 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
-            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            //->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
             ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
             ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
+            ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -195,9 +235,16 @@ class PatientController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
+        if($form->isSubmitted())
         {
-            $patient = $form->getData();
+            $file = $form->get('brochureFilename')->getData();
+            $pdfs_directory = $this->getParameter('pdfs_directory');
+            $filename = md5(uniqid()) .'.'. $file->guessExtension();
+            $file->move(
+                $pdfs_directory,
+                $filename
+            );
+            $patient->setBrochureFilename($filename);
              
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($patient);
@@ -248,9 +295,21 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => false,
                 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
-            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            //->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
             ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Current Location')))    
             ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Status')))
+            ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -265,9 +324,16 @@ class PatientController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
+        if($form->isSubmitted())
         {
-            $patient = $form->getData();
+            $file = $form->get('brochureFilename')->getData();
+            $pdfs_directory = $this->getParameter('pdfs_directory');
+            $filename = md5(uniqid()) .'.'. $file->guessExtension();
+            $file->move(
+                $pdfs_directory,
+                $filename
+            );
+            $patient->setBrochureFilename($filename);
              
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($patient);
@@ -319,6 +385,18 @@ class PatientController extends AbstractController
                 'label' => false,
                 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
             ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
+            ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -335,7 +413,14 @@ class PatientController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-            $patient = $form->getData();
+            $file = $form->get('brochureFilename')->getData();
+            $pdfs_directory = $this->getParameter('pdfs_directory');
+            $filename = md5(uniqid()) .'.'. $file->guessExtension();
+            $file->move(
+                $pdfs_directory,
+                $filename
+            );
+            $patient->setBrochureFilename($filename);
              
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($patient);
@@ -382,9 +467,21 @@ class PatientController extends AbstractController
             ->add('pSocialHistroy', TextareaType::class, array('required' => false,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Social Histroy')))
             ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Examination Details')))
             ->add('PatientType', EntityType::class, array('class' => PatientType::class, 'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
-            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            //->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
             ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
             ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
+            ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -452,9 +549,21 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => false,
                 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
-            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))    
+            //->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))    
             ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
             ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
+            ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -522,9 +631,21 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => false,
                 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
-            ->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
+            //->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
             ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
             ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
+            ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -593,6 +714,18 @@ class PatientController extends AbstractController
                 'label' => false,
                 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
             ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
+            ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',

@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
+use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Validator\Constraints\File;
 
 class DoctorController extends AbstractController
@@ -60,7 +61,18 @@ class DoctorController extends AbstractController
             ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false ))
+            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 
+                'constraints' => array(
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'image/jpg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => "Please upload photo less than 2MB.",   
+                    ])
+                ),
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -75,12 +87,15 @@ class DoctorController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($request->isMethod('POST') && $form->isSubmitted() && $form->isValid())
+        if($form->isSubmitted())
         {
-            $file = $doctor->getPhoto();
+            $file = $form->get('photo')->getData();
             $fileName = md5(uniqid()).'.'.$file->guessExtension();
             $file->move($this->getParameter('photos_directory'), $fileName); 
-            $doctor->setPhoto($fileName); 
+            $doctor->setPhoto($fileName);   
+            
+            //echo "<pre>";
+            //var_dump($file); die;
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($doctor);
@@ -118,6 +133,17 @@ class DoctorController extends AbstractController
             ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
+                new File([
+                    'maxSize' => '2048k',
+                    'mimeTypes' => [
+                        'image/jpg',
+                        'image/png',
+                    ],
+                    'mimeTypesMessage' => "Please upload photo less than 2MB.",   
+                    ])
+                ),
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -132,9 +158,9 @@ class DoctorController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
-        {
-             
+        if($form->isSubmitted())
+        {   
+                  
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 

@@ -18,9 +18,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
+use Symfony\Component\Validator\Constraints\File;
 
 
 class ConsultantController extends AbstractController
@@ -45,6 +47,17 @@ class ConsultantController extends AbstractController
             ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
+                new File([
+                    'maxSize' => '2048k',
+                    'mimeTypes' => [
+                        'image/jpg',
+                        'image/png',
+                    ],
+                    'mimeTypesMessage' => "Please upload photo less than 2MB.",   
+                    ])
+                ),
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -59,16 +72,18 @@ class ConsultantController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
+        if($form->isSubmitted())
         {
-            $consultant = $form->getData();
-             
+            $file = $form->get('photo')->getData();
+            $fileName = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move($this->getParameter('photos_directory'), $fileName); 
+            $consultant->setPhoto($fileName);    
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($consultant);
             $entityManager->flush(); 
 
-            return $this->redirectToRoute('consultants_list');
-            
+            return $this->redirectToRoute('consultants_list');  
         }
 
         return $this->render('consultant/consultant_add.html.twig', [
@@ -110,6 +125,17 @@ class ConsultantController extends AbstractController
             ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
+                new File([
+                    'maxSize' => '2048k',
+                    'mimeTypes' => [
+                        'image/jpg',
+                        'image/png',
+                    ],
+                    'mimeTypesMessage' => "Please upload photo less than 2MB.",   
+                    ])
+                ),
+            ))
             ->add('captchaCode', CaptchaType::class, array(
                 'captchaConfig' => 'ExampleCaptchaUserRegistration',
                 'label' => 'Retype the characters from the picture',
@@ -124,7 +150,7 @@ class ConsultantController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
+        if($form->isSubmitted())
         {
              
             $entityManager = $this->getDoctrine()->getManager();
