@@ -182,17 +182,19 @@
                             </thead>
                             <tbody>
                                 {% for patient in patients %}
-                                    {% if patient.getPatientType() == "ICU Patient" %}
-                                        {% if patient.getPStatus() == "Active" %} 
-                                            <tr>
-                                                <td><h7><a href="/icu/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
-                                                <td><p>{{ patient.pAddress }}</p></td>
-                                                <td><p>{{ patient.pGender }}</p></td>
-                                                <td><p>{{ patient.pDOB }}</p></td>
-                                                <td><p>{{ patient.pPhoneNumber }}</p></td>
-                                                <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
-                                            </tr>
-                                        {% endif %}    
+                                    {% if patient.getPatientType() == "In Patient" %}
+                                        {% if patient.getPCurrentLocation() == "ICU" %}
+                                            {% if patient.getPStatus() == "Active" %} 
+                                                <tr>
+                                                    <td><h7><a href="/icu/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
+                                                    <td><p>{{ patient.pAddress }}</p></td>
+                                                    <td><p>{{ patient.pGender }}</p></td>
+                                                    <td><p>{{ patient.pDOB }}</p></td>
+                                                    <td><p>{{ patient.pPhoneNumber }}</p></td>
+                                                    <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
+                                                </tr>
+                                            {% endif %} 
+                                        {% endif %}   
                                     {% endif %}
                                 {% endfor %}   
                             </tbody>

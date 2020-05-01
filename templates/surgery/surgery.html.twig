@@ -178,15 +178,19 @@
                             </thead>
                             <tbody>
                                 {% for patient in patients %}
-                                    {% if patient.getPatientType() == "Surgical Patient" %}
-                                    <tr>
-                                        <td><h7><a href="/surgery/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
-                                        <td><p>{{ patient.pAddress }}</p></td>
-                                        <td><p>{{ patient.pGender }}</p></td>
-                                        <td><p>{{ patient.pDOB }}</p></td>
-                                        <td><p>{{ patient.pPhoneNumber }}</p></td>
-                                        <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
-                                    </tr>
+                                    {% if patient.getPatientType() == "In Patient" %}
+                                        {% if patient.getPCurrentLocation() == "Operating Theater" or patient.getPCurrentLocation() == "Ward" %}
+                                            {% if patient.getPStatus() == "Active" %} 
+                                                <tr>
+                                                    <td><h7><a href="/surgery/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
+                                                    <td><p>{{ patient.pAddress }}</p></td>
+                                                    <td><p>{{ patient.pGender }}</p></td>
+                                                    <td><p>{{ patient.pDOB }}</p></td>
+                                                    <td><p>{{ patient.pPhoneNumber }}</p></td>
+                                                    <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
+                                                </tr>
+                                            {% endif %}    
+                                        {% endif %}        
                                     {% endif %}
                                 {% endfor %}    
                             </tbody>
