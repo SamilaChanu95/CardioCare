@@ -82,6 +82,12 @@ class Consultant
      * @ORM\JoinColumn(nullable=false)
      */
     private $Ward;
+
+    /** 
+     * @ORM\Column(type="string")
+     * 
+     */ 
+    private $photo; 
     
     public function getCaptchaCode()
     {
@@ -254,6 +260,17 @@ class Consultant
 
         return $this;
     }
+
+    public function getPhoto() 
+    { 
+        return $this->photo; 
+    } 
+     
+    public function setPhoto($photo) 
+    { 
+        $this->photo = $photo; 
+        return $this; 
+    } 
 
     public function __toString()
     {

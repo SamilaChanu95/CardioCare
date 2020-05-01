@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PatientRepository")
@@ -104,11 +105,6 @@ class Patient
     private $pExaminationDetails;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $pSurgeryInfo;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $pCurrentLocation;
@@ -138,6 +134,12 @@ class Patient
      * @ORM\OneToMany(targetEntity="App\Entity\ICU", mappedBy="Patient")
      */
     private $iCUs;
+
+    /**
+     * @ORM\Column(type="string")
+     * 
+     */
+    private $brochureFilename;
 
     protected $captchaCode;
     
@@ -356,11 +358,6 @@ class Patient
         return $this;
     }
 
-    public function getPSurgeryInfo()
-    {
-        return (boolean)$this->pSurgeryInfo;
-    }
-
     public function getPExaminationDetails(): ?string
     {
         return $this->pExaminationDetails;
@@ -380,7 +377,7 @@ class Patient
 
     public function setPCurrentLocation(string $pCurrentLocation): self
     {
-        $this->pCurrentLocations = $pCurrentLocation;
+        $this->pCurrentLocation = $pCurrentLocation;
 
         return $this;
     }
@@ -485,6 +482,18 @@ class Patient
                 $iCUs->setPatient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBrochureFilename()
+    {
+        return $this->brochureFilename;
+    }
+
+    public function setBrochureFilename($brochureFilename)
+    {
+        $this->brochureFilename = $brochureFilename;
 
         return $this;
     }

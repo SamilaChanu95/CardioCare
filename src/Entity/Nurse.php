@@ -81,6 +81,12 @@ class Nurse
      */
     private $surgeries;
 
+    /** 
+     * @ORM\Column(type="string")
+     * 
+     */ 
+    private $photo; 
+
     protected $captchaCode;
     
     public function getCaptchaCode()
@@ -266,6 +272,17 @@ class Nurse
 
         return $this;
     }
+
+    public function getPhoto() 
+    { 
+        return $this->photo; 
+    } 
+     
+    public function setPhoto($photo) 
+    { 
+        $this->photo = $photo; 
+        return $this; 
+    } 
 
     public function __toString()
     {

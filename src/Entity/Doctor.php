@@ -84,10 +84,8 @@ class Doctor
     private $surgeries;
 
     /** 
-     * @ORM\Column(type="resource")
+     * @ORM\Column(type="string")
      * 
-     * @Assert\NotBlank(message="Please, upload the photo.") 
-     * @Assert\File(mimeTypes={ "image/png" }) 
      */ 
     private $photo; 
 
