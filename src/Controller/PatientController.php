@@ -27,6 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class PatientController extends AbstractController
 {
@@ -140,17 +141,27 @@ class PatientController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted())
+        if($form->isSubmitted() && $form->isValid())
         {
 
             $file = $form->get('brochureFilename')->getData();
-            $pdfs_directory = $this->getParameter('pdfs_directory');
-            $filename = md5(uniqid()) .'.'. $file->guessExtension();
-            $file->move(
-                $pdfs_directory,
-                $filename
-            );
-            $patient->setBrochureFilename($filename);
+
+            if($file)
+            {
+                $pdfs_directory = $this->getParameter('pdfs_directory');
+                $filename = md5(uniqid()) .'.'. $file->guessExtension();
+
+                try {
+                    $file->move(
+                        $pdfs_directory,
+                        $filename
+                    );
+                } catch (FileException $e) {
+
+                }
+
+                $patient->setBrochureFilename($filename);
+            }
 
             //echo "<pre>";
             //var_dump($request); die;
@@ -235,17 +246,27 @@ class PatientController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted())
+        if($form->isSubmitted() && $form->isValid())
         {
             $file = $form->get('brochureFilename')->getData();
-            $pdfs_directory = $this->getParameter('pdfs_directory');
-            $filename = md5(uniqid()) .'.'. $file->guessExtension();
-            $file->move(
-                $pdfs_directory,
-                $filename
-            );
-            $patient->setBrochureFilename($filename);
-             
+
+            if($file)
+            {
+                $pdfs_directory = $this->getParameter('pdfs_directory');
+                $filename = md5(uniqid()) .'.'. $file->guessExtension();
+
+                try {
+                    $file->move(
+                        $pdfs_directory,
+                        $filename
+                    );
+                } catch (FileException $e) {
+
+                }
+
+                $patient->setBrochureFilename($filename);
+            }
+   
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($patient);
             $entityManager->flush(); 
@@ -324,16 +345,26 @@ class PatientController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted())
+        if($form->isSubmitted() && $form->isValid())
         {
             $file = $form->get('brochureFilename')->getData();
-            $pdfs_directory = $this->getParameter('pdfs_directory');
-            $filename = md5(uniqid()) .'.'. $file->guessExtension();
-            $file->move(
-                $pdfs_directory,
-                $filename
-            );
-            $patient->setBrochureFilename($filename);
+
+            if($file)
+            {
+                $pdfs_directory = $this->getParameter('pdfs_directory');
+                $filename = md5(uniqid()) .'.'. $file->guessExtension();
+
+                try {
+                    $file->move(
+                        $pdfs_directory,
+                        $filename
+                    );
+                } catch (FileException $e) {
+
+                }
+
+                $patient->setBrochureFilename($filename);
+            }
              
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($patient);
@@ -413,19 +444,31 @@ class PatientController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
+
             $file = $form->get('brochureFilename')->getData();
-            $pdfs_directory = $this->getParameter('pdfs_directory');
-            $filename = md5(uniqid()) .'.'. $file->guessExtension();
-            $file->move(
-                $pdfs_directory,
-                $filename
-            );
-            $patient->setBrochureFilename($filename);
-             
+
+            if($file)
+            {
+                $pdfs_directory = $this->getParameter('pdfs_directory');
+                $filename = md5(uniqid()) .'.'. $file->guessExtension();
+
+                try  {
+                    $file->move(
+                        $pdfs_directory,
+                        $filename
+                    );
+                } catch (FileException $e) {
+
+                }
+
+                $patient->setBrochureFilename($filename);             
+
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($patient);
             $entityManager->flush(); 
-
+            
             return $this->redirectToRoute('clinics_list');
         }
 
@@ -498,7 +541,26 @@ class PatientController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-             
+            $file = $form->get('brochureFilename')->getData();
+
+            if($file)
+            {
+                $pdfs_directory = $this->getParameter('pdfs_directory');
+                $filename = md5(uniqid()) .'.'. $file->guessExtension();
+
+                try  {
+                    $file->move(
+                        $pdfs_directory,
+                        $filename
+                    );
+                } catch (FileException $e) {
+
+                }
+
+                $patient->setBrochureFilename($filename);             
+
+            }
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
@@ -579,8 +641,27 @@ class PatientController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
-        {
-             
+        {    
+            $file = $form->get('brochureFilename')->getData();
+
+            if($file)
+            {
+                $pdfs_directory = $this->getParameter('pdfs_directory');
+                $filename = md5(uniqid()) .'.'. $file->guessExtension();
+
+                try  {
+                    $file->move(
+                        $pdfs_directory,
+                        $filename
+                    );
+                } catch (FileException $e) {
+
+                }
+
+                $patient->setBrochureFilename($filename);             
+
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
@@ -662,7 +743,26 @@ class PatientController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-             
+            $file = $form->get('brochureFilename')->getData();
+
+            if($file)
+            {
+                $pdfs_directory = $this->getParameter('pdfs_directory');
+                $filename = md5(uniqid()) .'.'. $file->guessExtension();
+
+                try  {
+                    $file->move(
+                        $pdfs_directory,
+                        $filename
+                    );
+                } catch (FileException $e) {
+
+                }
+
+                $patient->setBrochureFilename($filename);             
+
+            }
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
@@ -742,6 +842,25 @@ class PatientController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
+            $file = $form->get('brochureFilename')->getData();
+
+            if($file)
+            {
+                $pdfs_directory = $this->getParameter('pdfs_directory');
+                $filename = md5(uniqid()) .'.'. $file->guessExtension();
+
+                try  {
+                    $file->move(
+                        $pdfs_directory,
+                        $filename
+                    );
+                } catch (FileException $e) {
+
+                }
+
+                $patient->setBrochureFilename($filename);             
+
+            }
              
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
