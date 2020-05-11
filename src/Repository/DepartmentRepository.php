@@ -36,15 +36,24 @@ class DepartmentRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Department
+    public function findOneBySomeField($department): ?Department
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder("q")
+            ->where("q.department = :departmentid")
+            ->setParameter("departmentid", $department->getId())
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult();
         ;
     }
-    */
+
+    public function findDepartment($request): ?Department
+    {
+        return $this->createQueryBuilder("q")
+            ->where("q.department = :departmentid")
+            ->setParameter("departmentid", $request->query->get("departmentid"))
+            ->getQuery()
+            ->getResult();
+        ;
+    }
+    
 }

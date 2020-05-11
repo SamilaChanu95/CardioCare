@@ -1,0 +1,4 @@
+technician_list_units:
+    path:     /get-units-from-department
+    defaults: { _controller: "App:Technician:listUnitsOfDepartment" }
+    methods:  GET

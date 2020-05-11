@@ -84,10 +84,15 @@ class Technician
     private $Ward;
 
     /** 
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * 
      */ 
     private $photo; 
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $tStatus;
     
     public function getCaptchaCode()
     {
@@ -241,7 +246,7 @@ class Technician
     {
         if (!$this->surgeries->contains($surgery)) {
             $this->surgeries[] = $surgery;
-            $surgery->setTechnician($this);
+            $surgery->setTechnicianMain($this);
         }
 
         return $this;
@@ -252,8 +257,8 @@ class Technician
         if ($this->surgeries->contains($surgery)) {
             $this->surgeries->removeElement($surgery);
             // set the owning side to null (unless already changed)
-            if ($surgery->getTechnician() === $this) {
-                $surgery->setTechnician(null);
+            if ($surgery->getTechnicianMain() === $this) {
+                $surgery->setTechnicianMain(null);
             }
         }
 
@@ -270,6 +275,18 @@ class Technician
         $this->photo = $photo; 
         return $this; 
     } 
+
+    public function getTStatus(): ?string
+    {
+        return $this->tStatus;
+    }
+
+    public function setTStatus(string $tStatus): self
+    {
+        $this->tStatus = $tStatus;
+
+        return $this;
+    }
 
     public function __toString()
     {

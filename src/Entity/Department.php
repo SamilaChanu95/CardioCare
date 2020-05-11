@@ -43,12 +43,24 @@ class Department
      */
     private $consultants;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Unit", mappedBy="Department")
+     */
+    private $units;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Ward", mappedBy="Department")
+     */
+    private $wards;
+
     public function __construct()
     {
         $this->nurses = new ArrayCollection();
         $this->doctors = new ArrayCollection();
         $this->technicians = new ArrayCollection();
         $this->consultants = new ArrayCollection();
+        $this->units = new ArrayCollection();
+        $this->wards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,5 +207,67 @@ class Department
     public function __toString()
     {
         return $this->DepartmentName;
+    }
+
+    /**
+     * @return Collection|Unit[]
+     */
+    public function getUnits(): Collection
+    {
+        return $this->units;
+    }
+
+    public function addUnit(Unit $unit): self
+    {
+        if (!$this->units->contains($unit)) {
+            $this->units[] = $unit;
+            $unit->setDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUnit(Unit $unit): self
+    {
+        if ($this->units->contains($unit)) {
+            $this->units->removeElement($unit);
+            // set the owning side to null (unless already changed)
+            if ($unit->getDepartment() === $this) {
+                $unit->setDepartment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ward[]
+     */
+    public function getWards(): Collection
+    {
+        return $this->wards;
+    }
+
+    public function addWard(Ward $ward): self
+    {
+        if (!$this->wards->contains($ward)) {
+            $this->wards[] = $ward;
+            $ward->setDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWard(Ward $ward): self
+    {
+        if ($this->wards->contains($ward)) {
+            $this->wards->removeElement($ward);
+            // set the owning side to null (unless already changed)
+            if ($ward->getDepartment() === $this) {
+                $ward->setDepartment(null);
+            }
+        }
+
+        return $this;
     }
 }

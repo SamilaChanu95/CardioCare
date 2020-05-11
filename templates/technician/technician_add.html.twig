@@ -225,21 +225,21 @@
                                                 </div>
                                             </div>
                                             <div class="form-row">
-                                                <div class="form-group col-md-4">
+                                                <div class="form-group col-md-4" id="app_technician_department">
                                                     <label class="label">Department</label>
-                                                    {{ form_row(form.Department) }}
+                                                    {{ form_row(form.department) }}
                                                 </div>
                                             </div>
                                             <div class="form-row">
-                                                <div class="form-group col-md-4">
+                                                <div class="form-group col-md-4" id="app_technician_unit">
                                                     <label class="label">Unit</label>
-                                                    {{ form_row(form.Unit) }}
+                                                    {{ form_row(form.unit) }}
                                                 </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
-                                                    <label class="label">Ward</label>
-                                                    {{ form_row(form.Ward) }}
+                                                    <label class="label">Status</label>
+                                                    {{ form_row(form.tStatus) }}
                                                 </div>
                                             </div>
                                             <div class="form-row">
@@ -275,4 +275,40 @@
     <!-- Javascript Links -->
     {% include "js_part.html.twig" %}
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $('#app_technician_department').change(function () {
+            var departmentSelector = $(this);
+            
+            // Request the units of the selected department.
+            $.ajax({
+                url: "{{ path('technician_list_units') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    departmentid: departmentSelector.val()
+                },
+                success: function (units) {
+                    var unitSelect = $("#app_technician_unit");
+
+                    // Remove current options
+                    unitSelect.html('');
+                    
+                    // Empty value ...
+                    unitSelect.append('<option value> Select a unit of ' + departmentSelector.find("option:selected").text() + ' ...</option>');
+                    
+                    
+                    $.each(units, function (key, unit) {
+                        unitSelect.append('<option value="' + unit.id + '">' + unit.name + '</option>');
+                    });
+                },
+                error: function (err) {
+                    alert("An error ocurred while loading data ...");
+                }
+            });
+        });
+    </script>
 {% endblock %}

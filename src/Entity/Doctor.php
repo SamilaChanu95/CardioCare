@@ -84,10 +84,15 @@ class Doctor
     private $surgeries;
 
     /** 
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * 
      */ 
     private $photo; 
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $dStatus;
 
     protected $captchaCode;
     
@@ -120,6 +125,18 @@ class Doctor
     public function setDNIC(string $dNIC): self
     {
         $this->dNIC = $dNIC;
+
+        return $this;
+    }
+
+    public function getDStatus(): ?string
+    {
+        return $this->dStatus;
+    }
+
+    public function setDStatus(string $dStatus): self
+    {
+        $this->dStatus = $dStatus;
 
         return $this;
     }
@@ -256,7 +273,7 @@ class Doctor
     {
         if (!$this->surgeries->contains($surgery)) {
             $this->surgeries[] = $surgery;
-            $surgery->setDoctor($this);
+            $surgery->setDoctorMain($this);
         }
 
         return $this;
@@ -267,8 +284,8 @@ class Doctor
         if ($this->surgeries->contains($surgery)) {
             $this->surgeries->removeElement($surgery);
             // set the owning side to null (unless already changed)
-            if ($surgery->getDoctor() === $this) {
-                $surgery->setDoctor(null);
+            if ($surgery->getDoctorMain() === $this) {
+                $surgery->setDoctorMain(null);
             }
         }
 

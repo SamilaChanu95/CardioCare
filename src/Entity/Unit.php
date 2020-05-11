@@ -43,12 +43,23 @@ class Unit
      */
     private $consultants;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="units")
+     */
+    private $Department;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Ward", mappedBy="Unit")
+     */
+    private $wards;
+
     public function __construct()
     {
         $this->nurses = new ArrayCollection();
         $this->doctors = new ArrayCollection();
         $this->technicians = new ArrayCollection();
         $this->consultants = new ArrayCollection();
+        $this->wards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,5 +206,48 @@ class Unit
     public function __toString()
     {
         return $this->UnitName;
+    }
+
+    public function getDepartment(): ?Department
+    {
+        return $this->Department;
+    }
+
+    public function setDepartment(?Department $Department): self
+    {
+        $this->Department = $Department;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ward[]
+     */
+    public function getWards(): Collection
+    {
+        return $this->wards;
+    }
+
+    public function addWard(Ward $ward): self
+    {
+        if (!$this->wards->contains($ward)) {
+            $this->wards[] = $ward;
+            $ward->setUnit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWard(Ward $ward): self
+    {
+        if ($this->wards->contains($ward)) {
+            $this->wards->removeElement($ward);
+            // set the owning side to null (unless already changed)
+            if ($ward->getUnit() === $this) {
+                $ward->setUnit(null);
+            }
+        }
+
+        return $this;
     }
 }

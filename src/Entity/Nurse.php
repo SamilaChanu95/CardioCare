@@ -82,10 +82,15 @@ class Nurse
     private $surgeries;
 
     /** 
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * 
      */ 
     private $photo; 
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nStatus;
 
     protected $captchaCode;
     
@@ -254,7 +259,7 @@ class Nurse
     {
         if (!$this->surgeries->contains($surgery)) {
             $this->surgeries[] = $surgery;
-            $surgery->setNurse($this);
+            $surgery->setNurseMain($this);
         }
 
         return $this;
@@ -265,8 +270,8 @@ class Nurse
         if ($this->surgeries->contains($surgery)) {
             $this->surgeries->removeElement($surgery);
             // set the owning side to null (unless already changed)
-            if ($surgery->getNurse() === $this) {
-                $surgery->setNurse(null);
+            if ($surgery->getNurseMain() === $this) {
+                $surgery->setNurseMain(null);
             }
         }
 
@@ -283,6 +288,18 @@ class Nurse
         $this->photo = $photo; 
         return $this; 
     } 
+
+    public function getNStatus(): ?string
+    {
+        return $this->nStatus;
+    }
+
+    public function setNStatus(string $nStatus): self
+    {
+        $this->nStatus = $nStatus;
+
+        return $this;
+    }
 
     public function __toString()
     {

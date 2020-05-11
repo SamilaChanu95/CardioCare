@@ -43,6 +43,16 @@ class Ward
      */
     private $technicians;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="wards")
+     */
+    private $Department;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Unit", inversedBy="wards")
+     */
+    private $Unit;
+
     public function __construct()
     {
         $this->nurses = new ArrayCollection();
@@ -194,6 +204,30 @@ class Ward
                 $technician->setWard(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDepartment(): ?Department
+    {
+        return $this->Department;
+    }
+
+    public function setDepartment(?Department $Department): self
+    {
+        $this->Department = $Department;
+
+        return $this;
+    }
+
+    public function getUnit(): ?Unit
+    {
+        return $this->Unit;
+    }
+
+    public function setUnit(?Unit $Unit): self
+    {
+        $this->Unit = $Unit;
 
         return $this;
     }

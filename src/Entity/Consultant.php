@@ -84,10 +84,15 @@ class Consultant
     private $Ward;
 
     /** 
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * 
      */ 
     private $photo; 
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $cStatus;
     
     public function getCaptchaCode()
     {
@@ -242,7 +247,7 @@ class Consultant
     {
         if (!$this->surgeries->contains($surgery)) {
             $this->surgeries[] = $surgery;
-            $surgery->setConsultant($this);
+            $surgery->setConsultantMain($this);
         }
 
         return $this;
@@ -253,8 +258,8 @@ class Consultant
         if ($this->surgeries->contains($surgery)) {
             $this->surgeries->removeElement($surgery);
             // set the owning side to null (unless already changed)
-            if ($surgery->getConsultant() === $this) {
-                $surgery->setConsultant(null);
+            if ($surgery->getConsultantMain() === $this) {
+                $surgery->setConsultantMain(null);
             }
         }
 
@@ -271,6 +276,18 @@ class Consultant
         $this->photo = $photo; 
         return $this; 
     } 
+
+    public function getCStatus(): ?string
+    {
+        return $this->cStatus;
+    }
+
+    public function setCStatus(string $cStatus): self
+    {
+        $this->cStatus = $cStatus;
+
+        return $this;
+    }
 
     public function __toString()
     {

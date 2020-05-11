@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
+use Doctrine\ORM\EntityRepository;
 
 class ICUController extends AbstractController
 {
@@ -41,7 +42,15 @@ class ICUController extends AbstractController
         $icureport = new ICU();
 
         $form = $this->createFormBuilder($icureport)
-            ->add('Patient', EntityType::class, array('class' => Patient::class, 'required' => true,'label' => 'Patient Name','attr' => array('class' => 'form-control')))
+            ->add('Patient', EntityType::class, array(
+                'class' => Patient::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->Where('u.pStatus = :val1') 
+                        ->andWhere('u.pCurrentLocation != :val2')
+                        ->setParameters(array('val1' => "Active" , 'val2' => "Clinic"));   
+                }, 
+                'required' => true,'label' => 'Patient Name','attr' => array('class' => 'form-control')))
             ->add('AdmitDate', DateType::class, array('required' => true, 'html5' => false, 'label' => 'Admit Date'))
             ->add('Room', TextType::class, array('required' => true,'label' => "Patient's Room",'attr' => array('class' => 'form-control')))
             ->add('Code', TextType::class, array('required' => true,'label' => 'Code','attr' => array('class' => 'form-control')))

@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <form method="POST" action="" class="navbar-form navbar-left inline-form">
+        <input id="search" type="text" name="recherche" class="input-sm form-control">
+        <input type="submit" value="Search" class="btn-primary btn">
+
+        <div id="sresult" class="search-result">
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $('#search').keyup(function() {
+            recherche = $(this).val();
+
+            $.ajax({
+            type: "POST",
+            url: "{{ path('search') }}",
+            dataType: "json",
+            data: {recherche : recherche},
+            success : function(response) {
+                document.getElementById("sresult").innerHTML = "";
+                if(response.length === 1){
+                    var elmt = document.getElementById("sresult");
+                    elmt.style.display = "block";
+
+                    var result = response[0];
+                    document.getElementById("sresult").innerHTML = "<div class=resultat><p> Title : "+result.title+"<br/>oneData : "+result.data+"<br/>Gender : "+result.gender+"</p><br/></div>";
+                }
+                else {
+                for(var i =0;i <= response.length-1;i++) {
+                    var elmt = document.getElementById("sresult");
+                    elmt.style.display = "block";
+
+                    var result = response[i];
+                    document.getElementById("sresult").innerHTML += "<div class=resultat><p> Title : "+result.title+"<br/>Data : "+result.data+"<br/>Gender : "+result.gender+"</p><br/></div>";
+                }
+                }
+            }
+            });
+        });
+    </script>
+{% endblock %}

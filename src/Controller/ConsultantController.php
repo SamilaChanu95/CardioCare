@@ -23,7 +23,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 use Symfony\Component\Validator\Constraints\File;
-
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 class ConsultantController extends AbstractController
 {
@@ -43,18 +44,24 @@ class ConsultantController extends AbstractController
             ->add('cGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
             ->add('cDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
             ->add('cPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('cRole', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('cRole', ChoiceType::class, array('choices' => [ 'Main Consultant' =>  'Main Consultant', 'Assistant Consultant' => 'Assistant Consultant'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
-                new File([
-                    'maxSize' => '2048k',
-                    'mimeTypes' => [
-                        'image/jpg',
-                        'image/png',
-                    ],
-                    'mimeTypesMessage' => "Please upload photo less than 2MB.",   
+            ->add('cStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
+            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 
+                'constraints' => array(
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/tiff',
+                            'image/bmp',
+                            'image/other',
+                        ],
+                        'mimeTypesMessage' => "Please upload photo less than 2MB.",   
                     ])
                 ),
             ))
@@ -72,12 +79,26 @@ class ConsultantController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted())
+        if($form->isSubmitted() && $form->isValid())
         {
             $file = $form->get('photo')->getData();
-            $fileName = md5(uniqid()).'.'.$file->guessExtension();
-            $file->move($this->getParameter('photos_directory'), $fileName); 
-            $consultant->setPhoto($fileName);    
+
+            if($file)
+            {
+                $photos_directory = $this->getParameter('photos_directory');
+                $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+                try {
+                    $file->move(
+                        $photos_directory, 
+                        $fileName
+                    );
+                } catch (FileException $e) {
+    
+                }
+                
+                $consultant->setPhoto($fileName); 
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($consultant);
@@ -121,16 +142,21 @@ class ConsultantController extends AbstractController
             ->add('cGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
             ->add('cDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
             ->add('cPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('cRole', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('cRole', ChoiceType::class, array('choices' => [ 'Main Consultant' =>  'Main Consultant', 'Assistant Consultant' => 'Assistant Consultant'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('cStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
                 new File([
                     'maxSize' => '2048k',
                     'mimeTypes' => [
-                        'image/jpg',
+                        'image/jpeg',
                         'image/png',
+                        'image/gif',
+                        'image/tiff',
+                        'image/bmp',
+                        'image/other',
                     ],
                     'mimeTypesMessage' => "Please upload photo less than 2MB.",   
                     ])
@@ -150,9 +176,27 @@ class ConsultantController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted())
-        {
-             
+        if($form->isSubmitted() && $form->isValid())
+        {  
+            $file = $form->get('photo')->getData();
+
+            if($file)
+            {
+                $photos_directory = $this->getParameter('photos_directory');
+                $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+                try {
+                    $file->move(
+                        $photos_directory, 
+                        $fileName
+                    );
+                } catch (FileException $e) {
+    
+                }
+                
+                $consultant->setPhoto($fileName); 
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
@@ -162,6 +206,30 @@ class ConsultantController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    public function searchBarAction()
+    {
+        $form = $this->createFormBuilder(null)
+            ->add('search', TextType::class)
+            ->add('save', SubmitType::class, array('label'=> 'Search', 'attr' => array('class' => 'btn btn-danger mt-3')))
+            ->getForm();
+
+        return $this->render('consultant/consultant_search.html.twig', [
+            'form' => $form->createView(),
+        ]);    
+        
+    }
+
+    /**
+     * @Route("/search", name="handle_search")
+     */
+    public function handleSearch(Request $request)
+    {
+        var_dump($request->request->get('form')); 
+        die();    
+        
+    }
+
 }
 
 

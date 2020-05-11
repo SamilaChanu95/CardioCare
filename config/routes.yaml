@@ -18,3 +18,7 @@ hwi_oauth_login:
 
 captcha_routing:
     resource: "@CaptchaBundle/Resources/config/routing.yml"
+
+classical_search:
+    path:    /result/search
+    defaults: { _controller: App:Default:search }

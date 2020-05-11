@@ -113,17 +113,36 @@ class PatientController extends AbstractController
             ->add('pExaminationDetails', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Examination Details')))
             ->add('PatientType', EntityType::class, array('class' => PatientType::class, 'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
             //->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
-            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'Current Location' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control')))
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'In Patient' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'], 'Out Patient' => ['Clinic' => 'Clinic']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control')))
             ->add('pStatus', ChoiceType::class, array('choices' => ['Status' => [ 'Active' => 'Active', 'Deactive' => 'Deactive']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control')))
             ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '2048k',
                         'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/tiff',
+                            'image/bmp',
+                            'image/other',
                             'application/pdf',
                             'application/x-pdf',
+                            'application/msword',
+                            'application/zip',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                            'application/vnd.ms-word.document.macroEnabled.12',
+                            'application/vnd.ms-word.template.macroEnabled.12',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel.sheet.macroEnabled.12',
+                            'application/vnd.ms-powerpoint',
+                            'text/plain',
+                            'text/csv',    
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        'mimeTypesMessage' => 'Please upload a valid file.',
                     ])
                 ],
             ))
@@ -218,17 +237,36 @@ class PatientController extends AbstractController
                 'label' => false,
                 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
             //->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
-            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater', 'Clinic' => 'Clinic'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Current Location')))
             ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '2048k',
                         'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/tiff',
+                            'image/bmp',
+                            'image/other',
                             'application/pdf',
                             'application/x-pdf',
+                            'application/msword',
+                            'application/zip',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                            'application/vnd.ms-word.document.macroEnabled.12',
+                            'application/vnd.ms-word.template.macroEnabled.12',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel.sheet.macroEnabled.12',
+                            'application/vnd.ms-powerpoint',
+                            'text/plain',
+                            'text/csv',  
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        'mimeTypesMessage' => 'Please upload a valid file.',
                     ])
                 ],
             ))
@@ -317,17 +355,36 @@ class PatientController extends AbstractController
                 'label' => false,
                 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
             //->add('pSurgeryInfo', CheckboxType::class, array('required' => true,'label' => 'Surgery Complete', 'attr' => array('class' => 'col-md-1 mb-2')))
-            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Current Location')))    
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'ICU' => 'ICU', 'Ward' => 'Ward', 'Operating Theater' => 'Operating Theater', 'Clinic' => 'Clinic'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Current Location')))    
             ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control','placeholder' => 'Status')))
             ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '2048k',
                         'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/tiff',
+                            'image/bmp',
+                            'image/other',
                             'application/pdf',
                             'application/x-pdf',
+                            'application/msword',
+                            'application/zip',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                            'application/vnd.ms-word.document.macroEnabled.12',
+                            'application/vnd.ms-word.template.macroEnabled.12',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel.sheet.macroEnabled.12',
+                            'application/vnd.ms-powerpoint',
+                            'text/plain',
+                            'text/csv', 
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        'mimeTypesMessage' => 'Please upload a valid file.',
                     ])
                 ],
             ))
@@ -415,16 +472,36 @@ class PatientController extends AbstractController
                 'required' => true,
                 'label' => false,
                 'attr' => array('class' => 'form-control', 'placeholder' => 'Patient Type')))
-            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
+            ->add('pCurrentLocation', ChoiceType::class, array('choices' => [ 'Out Patient' => ['Clinic' => 'Clinic']], 'required' => true, 'label' => false, 'attr' => array('class' => 'form-control')))
+            ->add('pStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'], 'required' => true, 'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('brochureFilename', FileType::class, array('required' => false, 'mapped' => false, 'label' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '2048k',
                         'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/tiff',
+                            'image/bmp',
+                            'image/other',
                             'application/pdf',
                             'application/x-pdf',
+                            'application/msword',
+                            'application/zip',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                            'application/vnd.ms-word.document.macroEnabled.12',
+                            'application/vnd.ms-word.template.macroEnabled.12',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel.sheet.macroEnabled.12',
+                            'application/vnd.ms-powerpoint',
+                            'text/plain',
+                            'text/csv', 
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        'mimeTypesMessage' => 'Please upload a valid file.',
                     ])
                 ],
             ))
@@ -518,10 +595,29 @@ class PatientController extends AbstractController
                     new File([
                         'maxSize' => '2048k',
                         'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/tiff',
+                            'image/bmp',
+                            'image/other',
                             'application/pdf',
                             'application/x-pdf',
+                            'application/msword',
+                            'application/zip',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                            'application/vnd.ms-word.document.macroEnabled.12',
+                            'application/vnd.ms-word.template.macroEnabled.12',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel.sheet.macroEnabled.12',
+                            'application/vnd.ms-powerpoint',
+                            'text/plain',
+                            'text/csv', 
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        'mimeTypesMessage' => 'Please upload a valid file.',
                     ])
                 ],
             ))
@@ -619,10 +715,29 @@ class PatientController extends AbstractController
                     new File([
                         'maxSize' => '2048k',
                         'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/tiff',
+                            'image/bmp',
+                            'image/other',
                             'application/pdf',
                             'application/x-pdf',
+                            'application/msword',
+                            'application/zip',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                            'application/vnd.ms-word.document.macroEnabled.12',
+                            'application/vnd.ms-word.template.macroEnabled.12',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel.sheet.macroEnabled.12',
+                            'application/vnd.ms-powerpoint',
+                            'text/plain',
+                            'text/csv', 
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        'mimeTypesMessage' => 'Please upload a valid file.',
                     ])
                 ],
             ))
@@ -720,10 +835,29 @@ class PatientController extends AbstractController
                     new File([
                         'maxSize' => '2048k',
                         'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/tiff',
+                            'image/bmp',
+                            'image/other',
                             'application/pdf',
                             'application/x-pdf',
+                            'application/msword',
+                            'application/zip',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                            'application/vnd.ms-word.document.macroEnabled.12',
+                            'application/vnd.ms-word.template.macroEnabled.12',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel.sheet.macroEnabled.12',
+                            'application/vnd.ms-powerpoint',
+                            'text/plain',
+                            'text/csv', 
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        'mimeTypesMessage' => 'Please upload a valid file.',
                     ])
                 ],
             ))
@@ -819,10 +953,29 @@ class PatientController extends AbstractController
                     new File([
                         'maxSize' => '2048k',
                         'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/tiff',
+                            'image/bmp',
+                            'image/other',
                             'application/pdf',
                             'application/x-pdf',
+                            'application/msword',
+                            'application/zip',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                            'application/vnd.ms-word.document.macroEnabled.12',
+                            'application/vnd.ms-word.template.macroEnabled.12',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel.sheet.macroEnabled.12',
+                            'application/vnd.ms-powerpoint',
+                            'text/plain',
+                            'text/csv', 
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        'mimeTypesMessage' => 'Please upload a valid file.',
                     ])
                 ],
             ))

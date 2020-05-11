@@ -22,6 +22,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Form\TechnicianType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TechnicianController extends AbstractController
 {
@@ -45,49 +48,30 @@ class TechnicianController extends AbstractController
     {
         $technician = new Technician();
 
-        $form = $this->createFormBuilder($technician)
-            ->add('tNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Technician')))
-            ->add('tFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Firstname of Technician')))
-            ->add('tLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Lastname of Technician')))
-            ->add('tAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Technician')))
-            ->add('tGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
-            ->add('tDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
-            ->add('tPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('tRole', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
-                new File([
-                    'maxSize' => '2048k',
-                    'mimeTypes' => [
-                        'image/jpg',
-                        'image/png',
-                    ],
-                    'mimeTypesMessage' => "Please upload valid photo.",   
-                    ])
-                ),
-            ))            
-            ->add('captchaCode', CaptchaType::class, array(
-                'captchaConfig' => 'ExampleCaptchaUserRegistration',
-                'label' => 'Retype the characters from the picture',
-                'constraints' => [
-                    new ValidCaptcha ([
-                        'message' => 'Invalid captcha, please try again',
-                    ]),
-                ],
-            ))
-            ->add('save', SubmitType::class, array('label'=> 'Create', 'attr' => array('class' => 'btn btn-primary mt-3')))
-            ->getForm();
-
+        $form = $this->createForm(TechnicianType::class, $technician);
+            
         $form->handleRequest($request);
 
-        if($form->isSubmitted())
+        if($form->isSubmitted() && $form->isValid())
         {
             $file = $form->get('photo')->getData();
-            $fileName = md5(uniqid()).'.'.$file->guessExtension();
-            $file->move($this->getParameter('photos_directory'), $fileName); 
-            $technician->setPhoto($fileName);  
+
+            if($file)
+            {
+                $photos_directory = $this->getParameter('photos_directory');
+                $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+                try {
+                    $file->move(
+                        $photos_directory, 
+                        $fileName
+                    );
+                } catch (FileException $e) {
+    
+                }
+                
+                $technician->setPhoto($fileName); 
+            } 
              
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($technician);
@@ -97,6 +81,36 @@ class TechnicianController extends AbstractController
         }
 
         return $this->render('technician/technician_add.html.twig',array('form' => $form->createView()));    
+    }
+
+    /**
+     * Returns a JSON string with the neighborhoods of the City with the providen id.
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */             
+    public function listUnitsOfDepartmentAction(Request $request)
+    {
+        // Get Entity manager and repository
+        $em = $this->getDoctrine()->getManager();
+        $unitsRepository = $em->getRepository(Unit::class);
+        
+        // Search the neighborhoods that belongs to the city with the given id as GET parameter "cityid"
+        $units = $unitsRepository->departmentRepository->findDepartment($request);
+        
+        // Serialize into an array the data that we need, in this case only name and id
+        // Note: you can use a serializer as well, for explanation purposes, we'll do it manually
+        $responseArray = array();
+        foreach($units as $unit){
+            $responseArray[] = array(
+                "id" => $unit->getId(),
+                "name" => $unit->getName()
+            );
+        }
+        
+        // Return array with structure of the neighborhoods of the providen city id
+        return new JsonResponse($responseArray);
+
     }
 
     /**
@@ -116,16 +130,21 @@ class TechnicianController extends AbstractController
             ->add('tGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
             ->add('tDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
             ->add('tPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('tRole', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('tRole', ChoiceType::class, array('choices' => [ 'Main Technician' =>  'Main Technician', 'Assistant Technician' => 'Assistant Technician'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('tStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
                 new File([
                     'maxSize' => '2048k',
                     'mimeTypes' => [
-                        'image/jpg',
+                        'image/jpeg',
                         'image/png',
+                        'image/gif',
+                        'image/tiff',
+                        'image/bmp',
+                        'image/other',
                     ],
                     'mimeTypesMessage' =>  "Please upload valid photo.",    
                     ])
@@ -145,8 +164,26 @@ class TechnicianController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted())
+        if($form->isSubmitted() && $form->isValid())
         {
+            $file = $form->get('photo')->getData();
+
+            if($file)
+            {
+                $photos_directory = $this->getParameter('photos_directory');
+                $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+                try {
+                    $file->move(
+                        $photos_directory, 
+                        $fileName
+                    );
+                } catch (FileException $e) {
+    
+                }
+                
+                $technician->setPhoto($fileName); 
+            }
              
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();

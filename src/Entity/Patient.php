@@ -494,7 +494,6 @@ class Patient
     public function setBrochureFilename($brochureFilename)
     {
         $this->brochureFilename = $brochureFilename;
-
         return $this;
     }
 
