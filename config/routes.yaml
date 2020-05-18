@@ -22,3 +22,8 @@ captcha_routing:
 classical_search:
     path:    /result/search
     defaults: { _controller: App:Default:search }
+
+doctor_list_units:
+    path:     /get-units-from-department
+    defaults: { _controller: "App:Doctor:listUnitsOfDepartmentAction" }
+    methods:  GET
