@@ -95,7 +95,7 @@ class TechnicianController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $unitsRepository = $em->getRepository(Unit::class);
         
-        // Search the neighborhoods that belongs to the city with the given id as GET parameter "cityid"
+        // Search the neighborhoods that belongs to the city with the given id as GET parameter "unitid"
         $units = $unitsRepository->departmentRepository->findDepartment($request);
         
         // Serialize into an array the data that we need, in this case only name and id
@@ -104,7 +104,7 @@ class TechnicianController extends AbstractController
         foreach($units as $unit){
             $responseArray[] = array(
                 "id" => $unit->getId(),
-                "name" => $unit->getName()
+                "name" => $unit->getUnitName()
             );
         }
         

@@ -7,6 +7,7 @@ use App\Entity\Consultant;
 use App\Entity\Department;
 use App\Entity\Unit;
 use App\Entity\Ward;
+use App\Repository\ConsultantRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -221,13 +222,33 @@ class ConsultantController extends AbstractController
     }
 
     /**
-     * @Route("/search", name="handle_search")
+     * @Route("/search", name="ajax_search")
      */
-    public function handleSearch(Request $request)
+    public function searchAction(Request $request)
     {
-        var_dump($request->request->get('form')); 
-        die();    
+        $entityManager = $this->getDoctrine()->getManager();
+        $requestString = $request->get('q');
+        $consultants = $entityManager->getRepository(Consultant::class)->findEntitiesByString($requestString);
+        if(!$consultants)
+        {
+            $result['consultants']['error'] = "Consultant not found :( ";
+            var_dump("hello");
+        }
+        else
+        {
+            $result['consultants'] = $this->getRealEntities($consultants);
+        }
         
+        return new Response(json_encode($result));
+    }
+
+    public function getRealEntities($consultants)
+    {
+        foreach($consultants as $consultants)
+        {
+            $realEntities[$consultants->getId()] = [$consultants->getCFirstName(), $consultants->getCLastName()];
+        }
+        return $realEntities;
     }
 
 }

@@ -224,16 +224,16 @@
                                                     {{ form_row(form.tRole) }}
                                                 </div>
                                             </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-4" id="app_technician_department">
+                                            <div class="form-row" id="app_technician_department">
+                                                <div class="form-group col-md-4">
                                                     <label class="label">Department</label>
-                                                    {{ form_row(form.department) }}
+                                                    {{ form_row(form.department) }} {# <select id="ge_candidatbundle_annonce_department" ... #}
                                                 </div>
                                             </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-4" id="app_technician_unit">
+                                            <div class="form-row" id="app_technician_unit">
+                                                <div class="form-group col-md-4">
                                                     <label class="label">Unit</label>
-                                                    {{ form_row(form.unit) }}
+                                                    {{ form_row(form.unit) }} {# <select id="ge_candidatbundle_annonce_unit" ... #}
                                                 </div>
                                             </div>
                                             <div class="form-row">
@@ -278,37 +278,23 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script>
-        $('#app_technician_department').change(function () {
-            var departmentSelector = $(this);
-            
-            // Request the units of the selected department.
-            $.ajax({
-                url: "{{ path('technician_list_units') }}",
-                type: "GET",
-                dataType: "JSON",
-                data: {
-                    departmentid: departmentSelector.val()
-                },
-                success: function (units) {
-                    var unitSelect = $("#app_technician_unit");
-
-                    // Remove current options
-                    unitSelect.html('');
-                    
-                    // Empty value ...
-                    unitSelect.append('<option value> Select a unit of ' + departmentSelector.find("option:selected").text() + ' ...</option>');
-                    
-                    
-                    $.each(units, function (key, unit) {
-                        unitSelect.append('<option value="' + unit.id + '">' + unit.name + '</option>');
-                    });
-                },
-                error: function (err) {
-                    alert("An error ocurred while loading data ...");
-                }
+        var $department = $('#ge_candidatbundle_annonce_department');
+            $department.change(function() {
+                var $form = $(this).closest('form');
+                var data = {};
+                data[$department.attr('name')] = $department.val();
+                $.ajax({
+                    url : $form.attr('action'),
+                    type: $form.attr('method'),
+                    data : data,
+                    success: function(html) {
+                        $('#ge_candidatbundle_annonce_unit').replaceWith(
+                            $(html).find('#ge_candidatbundle_annonce_unit')
+                        );
+                    }
+                });
             });
-        });
     </script>
 {% endblock %}

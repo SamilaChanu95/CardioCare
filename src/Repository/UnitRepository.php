@@ -3,8 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Unit;
+use App\Entity\Department;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Bridge\Doctrine;
 
 /**
  * @method Unit|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,20 +24,51 @@ class UnitRepository extends ServiceEntityRepository
         parent::__construct($registry, Unit::class);
     }
 
-    // /**
-    //  * @return Unit[] Returns an array of Unit objects
-    //  */
     /*
-    public function findByExampleField($value)
+    public function findByUnits($id)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $query = $entityManager->createQueryBuilder()
+                    ->select('u')
+                    ->from(Unit::class, 'u')
+                    ->from(Department::class, 'd')
+                    ->where('u.Department = d.id')
+                    ->getQuery();
+
+        $unit = $query->getSingleResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
+        
+        return $unit;
+        
+        /*
+        return $this->createQueryBuilder('unit')
+            ->addSelect('unit')
+            ->from(Unit::class, 'unit')
+            ->from(Department::class, 'department')
+            ->where("unit.Department = department.id")
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult(Query::HYDRATE_ARRAY);
+
+        */
+        //$units = (array) $queryBuilder;             
+        //return $units;
+
+        /*
+        $query = $entityManager->createQuery(
+            'SELECT u.UnitName
+            FROM App\Entity\Unit u
+            FROM App\Entity\Department d
+            WHERE d.id = u.Department'
+        );
+        
+        // returns an array of Product objects
+        return $query->getResult();
+        
+
+        //$query->select('u')
+        //      ->innerJoin(Department::class, 'd', Join::WITH, 'd.id = u.Department');            
+        //return $query;
+
     }
     */
 

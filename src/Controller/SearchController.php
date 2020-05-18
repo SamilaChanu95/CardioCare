@@ -16,7 +16,7 @@ use App\Entity\Consultant;
 class SearchController extends AbstractController
 {
     /**
-     * @Route("/search", name="search")
+     * @Route("/searchItem", name="search")
      */
     public function searchAction(Request $request)
     {
@@ -28,10 +28,10 @@ class SearchController extends AbstractController
         $search = $request->request->get('recherche');
 
         if ($search == null) {
-            $searchresult = $em->getRepository('AppBundle:User')->findAll();
+            $searchresult = $em->getRepository(Consultant::class)->findAll();
         }
         else {
-            $searchresult = $em->getRepository('AppBundle:User')->findByUsername($search);
+            $searchresult = $em->getRepository(Consultant::class)->findByUsername($search);
         }
 
         foreach ($searchresult as $datasearch)

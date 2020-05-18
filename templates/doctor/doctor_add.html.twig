@@ -236,14 +236,14 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
-                                                    <label class="label">Department</label>
-                                                    {{ form_row(form.Department) }}
+                                                    <label class="label">Select your department</label>
+                                                    {{ form_row(form.Department) }} {# <select id="app_doctor_department" ... #}
                                                 </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
-                                                    <label class="label">Unit</label>
-                                                    {{ form_row(form.Unit) }}
+                                                    <label class="label">Select your unit</label>
+                                                    {{ form_row(form.Unit) }} {# <select id="app_doctor_unit" ... #}
                                                 </div>
                                             </div>
                                             <div class="form-row">
@@ -291,4 +291,40 @@
     <!-- Javascript Links -->
     {% include "js_part.html.twig" %}
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $('#app_doctor_department').change(function () {
+            var departmentSelector = $(this);
+            
+            // Request the units of the selected department.
+            $.ajax({
+                url: "{{ path('doctor_list_units') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    departmentid: departmentSelector.val()
+                },
+                success: function (units) {
+                    var unitSelect = $("#app_doctor_unit");
+
+                    // Remove current options
+                    unitSelect.html('');
+                    
+                    // Empty value ...
+                    unitSelect.append('<option value> Select a unit of ' + departmentSelector.find("option:selected").text() + ' ...</option>');
+                    
+                    
+                    $.each(units, function (key, unit) {
+                        unitSelect.append('<option value="' + unit.id + '">' + unit.UnitName + '</option>');
+                    });
+                },
+                error: function (err) {
+                    alert("An error ocurred while loading data ...");
+                }
+            });
+        });
+    </script>
 {% endblock %}

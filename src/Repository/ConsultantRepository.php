@@ -47,4 +47,39 @@ class ConsultantRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @return Consultant[]
+     */
+    public function findEntitiesByString($str):array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Consultant p
+            WHERE p.cFirstName LIKE :str
+            ORDER BY p.id ASC'
+        )->setParameter('str', '%'.$str.'%');
+
+        // returns an array of Product objects
+        return $query->getResult();
+        
+        
+    }
+
+    /*
+    public function findEntitiesByString($str)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.cFirstName LIKE :str')
+            ->setParameter('str', '%'.$str.'%')
+            ->orderBy('p.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+   
+    */
+    
 }

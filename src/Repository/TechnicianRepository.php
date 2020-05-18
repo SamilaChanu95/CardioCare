@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Technician;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use App\Controller\TechnicianController;
+use Doctrine\ORM\Query;
 
 /**
  * @method Technician|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +49,6 @@ class TechnicianRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    
 }

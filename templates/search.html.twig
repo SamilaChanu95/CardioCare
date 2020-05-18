@@ -2,46 +2,70 @@
 
 {% block body %}
 <div class="container">
-    <form method="POST" action="" class="navbar-form navbar-left inline-form">
-        <input id="search" type="text" name="recherche" class="input-sm form-control">
-        <input type="submit" value="Search" class="btn-primary btn">
-
-        <div id="sresult" class="search-result">
+    <div class="sidebar-search">
+        <div class="input-group">
+            <input id="search" type="text" class="input-sm form-control" placeholder="Search here..">
         </div>
-    </form>
-</div>
-{% endblock %}
+    </div>    
+    <ul class="nav" id="side-menu">
+        <li>
+            <a href="#">Entities<span class="fa arrow"></span></a>
+            <ul class="nav" id="entitiesNav"></ul>
+        </li>
+    </ul>
 
-{% block javascripts %}
-    <script>
-        $('#search').keyup(function() {
-            recherche = $(this).val();
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-            $.ajax({
-            type: "POST",
-            url: "{{ path('search') }}",
-            dataType: "json",
-            data: {recherche : recherche},
-            success : function(response) {
-                document.getElementById("sresult").innerHTML = "";
-                if(response.length === 1){
-                    var elmt = document.getElementById("sresult");
-                    elmt.style.display = "block";
-
-                    var result = response[0];
-                    document.getElementById("sresult").innerHTML = "<div class=resultat><p> Title : "+result.title+"<br/>oneData : "+result.data+"<br/>Gender : "+result.gender+"</p><br/></div>";
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            //console.log("test1");
+            var searchRequest = null;
+            $("#search").keyup(function() {
+                var minlength = 1;
+                var that = this;
+                var value = $(this).val();
+                var entitySelector = $("#entitiesNav").html('');
+                //console.log("test2");
+                if(value.length >= minlength) {
+                    //console.log("test3");
+                    if(searchRequest == null) {
+                        console.log("test4");
+                    }
+                    if(searchRequest != null) {
+                        //console.log("test5");
+                        searchRequest.abort();
+                        //console.log("test3");
+                        searchRequest = $.ajax({
+                            type: "GET",
+                            url: "{{ path('ajax_search') }}",
+                            data: {
+                                'q': value
+                            },
+                            dataType: "text",
+                            success: function(msg) {
+                                if(value === $(that).val()) {
+                                    var result = JSON.parse(msg);
+                                    $.each(result, function(key, arr) {
+                                        $.each(arr, function(id, value) {
+                                            if(key === 'consultants') {
+                                                if(id !== 'error') {
+                                                    console.log(value[1]);
+                                                    entitySelector.append('<li><b>'+value[1]+'</b><a href="/consultant/edit/'+id+'">'+'<p>'+value[0]+'</p>'+'</a></li>');              
+                                                } else {
+                                                    entitySelector.append('<li class="errorLi">'+value+'</li>');
+                                                }
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+                        });
+                    }
                 }
-                else {
-                for(var i =0;i <= response.length-1;i++) {
-                    var elmt = document.getElementById("sresult");
-                    elmt.style.display = "block";
-
-                    var result = response[i];
-                    document.getElementById("sresult").innerHTML += "<div class=resultat><p> Title : "+result.title+"<br/>Data : "+result.data+"<br/>Gender : "+result.gender+"</p><br/></div>";
-                }
-                }
-            }
             });
         });
     </script>
+
+</div>
+    
 {% endblock %}

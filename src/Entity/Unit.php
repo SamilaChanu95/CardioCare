@@ -46,7 +46,7 @@ class Unit
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="units")
      */
-    private $Department;
+    protected $Department;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Ward", mappedBy="Unit")
