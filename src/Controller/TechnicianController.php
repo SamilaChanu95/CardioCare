@@ -24,39 +24,41 @@ use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use App\Form\TechnicianType;
+use App\Repository\TechnicianRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+* @Route("/technician")
+*/
 class TechnicianController extends AbstractController
 {
     /**
-     * @Route("/technician", name="technicians_list")
+     * @Route("/", name="technician_index", methods={"GET"})
      */
-    public function display()
+    public function index(TechnicianRepository $technicianRepository): Response
     {
         $technicians = $this->getDoctrine()->getRepository(Technician::class)->findAll();
-
         return $this->render('technician/technician.html.twig', [
             'technicians' => $technicians,
         ]);
     }
 
     /**
-     * @Route("/technician/add", name="technician_add")
+     * @Route("/add", name="technician_add", methods={"GET","POST"})
      */
 
-    public function createTechnician(Request $request)
+    public function createTechnician(Request $request):Response
     {
         $technician = new Technician();
-
-        $form = $this->createForm(TechnicianType::class, $technician);
-            
+        $form = $this->createForm(TechnicianType::class, $technician,['edit_mode' => false,]);        
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
         {
+            dump($technician);
             $file = $form->get('photo')->getData();
 
-            if($file)
+            if($file) 
             {
                 $photos_directory = $this->getParameter('photos_directory');
                 $fileName = md5(uniqid()).'.'.$file->guessExtension();
@@ -77,91 +79,32 @@ class TechnicianController extends AbstractController
             $entityManager->persist($technician);
             $entityManager->flush(); 
 
-            return $this->redirectToRoute('technicians_list');
+            return $this->redirectToRoute('technician_index');
         }
 
-        return $this->render('technician/technician_add.html.twig',array('form' => $form->createView()));    
+        return $this->render('technician/new.html.twig',array(
+            'technician' => $technician,
+            'form' => $form->createView()
+        ));    
     }
 
-    /**
-     * Returns a JSON string with the neighborhoods of the City with the providen id.
-     * 
-     * @param Request $request
-     * @return JsonResponse
-     */             
-    public function listUnitsOfDepartmentAction(Request $request)
-    {
-        // Get Entity manager and repository
-        $em = $this->getDoctrine()->getManager();
-        $unitsRepository = $em->getRepository(Unit::class);
-        
-        // Search the neighborhoods that belongs to the city with the given id as GET parameter "unitid"
-        $units = $unitsRepository->departmentRepository->findDepartment($request);
-        
-        // Serialize into an array the data that we need, in this case only name and id
-        // Note: you can use a serializer as well, for explanation purposes, we'll do it manually
-        $responseArray = array();
-        foreach($units as $unit){
-            $responseArray[] = array(
-                "id" => $unit->getId(),
-                "name" => $unit->getUnitName()
-            );
-        }
-        
-        // Return array with structure of the neighborhoods of the providen city id
-        return new JsonResponse($responseArray);
-
-    }
 
     /**
-     * @Route("/technician/edit/{id}", name="technician_edit")
+     * @Route("/{id}", name="technician_show", methods={"GET"})
      */
-    public function edit(Request $request,$id)
+    public function show(Technician $technician): Response
     {
-        $technician = new Technician();
+        return $this->render('technician/show.html.twig', [
+            'technician' => $technician,
+        ]);
+    }
 
-        $technician = $this->getDoctrine()->getRepository(Technician::class)->find($id);
-
-        $form = $this->createFormBuilder($technician)
-            ->add('tNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Technician')))
-            ->add('tFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Firstname of Technician')))
-            ->add('tLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Lastname of Technician')))
-            ->add('tAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Technician')))
-            ->add('tGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
-            ->add('tDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
-            ->add('tPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('tRole', ChoiceType::class, array('choices' => [ 'Main Technician' =>  'Main Technician', 'Assistant Technician' => 'Assistant Technician'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('tStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
-            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
-                new File([
-                    'maxSize' => '2048k',
-                    'mimeTypes' => [
-                        'image/jpeg',
-                        'image/png',
-                        'image/gif',
-                        'image/tiff',
-                        'image/bmp',
-                        'image/other',
-                    ],
-                    'mimeTypesMessage' =>  "Please upload valid photo.",    
-                    ])
-                ),
-            )) 
-            ->add('captchaCode', CaptchaType::class, array(
-                'captchaConfig' => 'ExampleCaptchaUserRegistration',
-                'label' => 'Retype the characters from the picture',
-                'constraints' => [
-                    new ValidCaptcha ([
-                        'message' => 'Invalid captcha, please try again',
-                    ]),
-                ]
-            ))
-            ->add('save', SubmitType::class, array('label'=> 'Update', 'attr' => array('class' => 'btn btn-primary mt-3')))
-            ->getForm();
-
+    /**
+     * @Route("/{id}/edit", name="technician_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, Technician $technician): Response
+    {
+        $form = $this->createForm(TechnicianType::class, $technician,['edit_mode' => true,]);    
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
@@ -188,10 +131,108 @@ class TechnicianController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            return $this->redirectToRoute('technicians_list');
+            return $this->redirectToRoute('technician_index');
         }
 
-        return $this->render('technician/technician_edit.html.twig', ['form' => $form->createView()]);    
+        return $this->render('technician/edit.html.twig', [
+            'technician' => $technician,
+            'form' => $form->createView(),
+        ]);    
+    }
+
+    /**
+     * @Route("/{id}", name="technician_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Technician $technician): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$technician->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($technician);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('technician_index');
+    }
+
+    /**
+    * @Route("/department", name="technician_getDepartment", methods={"GET","POST"})
+    */
+    public function getDepartment(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Hospital');
+        $hospital = $repository->findOneById($id);
+        dump($hospital);
+ 
+        $departments = $hospital->getDepartments();
+        
+        $responseArray = array();
+        foreach($departments as $department){
+            $responseArray[] = array(
+                "id" => $department->getId(),
+                "name" => $department->getDepartmentName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
+    }
+
+    
+    /**
+    * @Route("/unit", name="technician_getUnit", methods={"GET","POST"})
+    */
+    
+    public function getUnit(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Department');
+        $department = $repository->findOneById($id);
+        dump($department);
+ 
+        $units = $department->getUnits();
+        
+        $responseArray = array();
+        foreach($units as $unit){
+            $responseArray[] = array(
+                "id" => $unit->getId(),
+                "name" => $unit->getUnitName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
+    }
+
+    /**
+    * @Route("/ward", name="technician_getWard", methods={"GET","POST"})
+    */
+    
+    public function getWard(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Unit');
+        $unit = $repository->findOneById($id);
+        dump($unit);
+ 
+        $wards = $unit->getWards();
+        
+        $responseArray = array();
+        foreach($wards as $ward){
+            $responseArray[] = array(
+                "id" => $ward->getId(),
+                "name" => $ward->getWardName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
     }
 
 }

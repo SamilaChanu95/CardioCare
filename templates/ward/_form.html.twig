@@ -1,0 +1,52 @@
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_9.jpg') }}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h2 class="breadcrumb-item"><b>Unit details</b></h2>
+            </div>
+        </div>
+    </div>
+</section>
+                        
+<section class="ftco-section">
+    <div class="container1">
+        <div class="card card-4">
+            <div class="card-body">
+                <h4 class="title">Mandarory Information</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 m-md-auto ftco-animate">		   
+                    {{ form_start(form) }}  
+                        <div class="form-row">
+                            <div class="form-group col-md-4">  
+                                <label class="label">Hospital Name</label>
+                                {{ form_widget(form.Hospital) }}            
+                            </div>
+                        </div>
+                         <div class="form-row">
+                            <div class="form-group col-md-4">  
+                                <label class="label">Department Name</label>
+                                {{ form_widget(form.Department) }}    
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">  
+                                <label class="label">Unit Name</label>        
+                                {{ form_widget(form.Unit) }}    
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">  
+                                <label class="label">Ward Name</label> 
+                                {{ form_widget(form.WardName) }}   
+                            </div>
+                        </div>
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                    </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

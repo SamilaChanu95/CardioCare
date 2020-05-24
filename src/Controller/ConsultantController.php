@@ -2,82 +2,45 @@
 
 namespace App\Controller;
 
-
+use App\Form\ConsultantType;
 use App\Entity\Consultant;
-use App\Entity\Department;
-use App\Entity\Unit;
-use App\Entity\Ward;
 use App\Repository\ConsultantRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
-use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
-use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @Route("/consultant")
+ */
 class ConsultantController extends AbstractController
 {
 
     /**
-     * @Route("/consultant/add", name="consultant_add")
+     * @Route("/", name="consultant_index", methods={"GET"})
      */
-    public function createConsultant(Request $request)
+    public function index(ConsultantRepository $consultantRepository): Response
+    {
+        return $this->render('consultant/consultant.html.twig', [
+            'consultants' => $consultantRepository->findAll(),
+        ]);
+    }
+
+    /**
+     * @Route("/add", name="consultant_add", methods={"GET","POST"})
+     */
+    public function createConsultant(Request $request):Response
     {
         $consultant = new Consultant();
-
-        $form = $this->createFormBuilder($consultant)
-            ->add('cNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Technician')))
-            ->add('cFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Technician')))
-            ->add('cLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Technician')))
-            ->add('cAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Technician')))
-            ->add('cGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
-            ->add('cDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
-            ->add('cPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('cRole', ChoiceType::class, array('choices' => [ 'Main Consultant' =>  'Main Consultant', 'Assistant Consultant' => 'Assistant Consultant'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('cStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
-            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 
-                'constraints' => array(
-                    new File([
-                        'maxSize' => '2048k',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                            'image/gif',
-                            'image/tiff',
-                            'image/bmp',
-                            'image/other',
-                        ],
-                        'mimeTypesMessage' => "Please upload photo less than 2MB.",   
-                    ])
-                ),
-            ))
-            ->add('captchaCode', CaptchaType::class, array(
-                'captchaConfig' => 'ExampleCaptchaUserRegistration',
-                'label' => 'Retype the characters from the picture',
-                'constraints' => [
-                    new ValidCaptcha ([
-                        'message' => 'Invalid captcha, please try again',
-                    ]),
-                ],
-            ))
-            ->add('save', SubmitType::class, array('label'=> 'Create', 'attr' => array('class' => 'btn btn-primary mt-3')))
-            ->getForm();
-
+        $form = $this->createForm(ConsultantType::class, $consultant,['edit_mode' => false,]);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
@@ -105,76 +68,31 @@ class ConsultantController extends AbstractController
             $entityManager->persist($consultant);
             $entityManager->flush(); 
 
-            return $this->redirectToRoute('consultants_list');  
+            return $this->redirectToRoute('consultant_index');  
         }
 
-        return $this->render('consultant/consultant_add.html.twig', [
-            'form' => $form->createView()
+        return $this->render('consultant/new.html.twig', [
+            'consultant' => $consultant,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/consultant", name="consultants_list")
+     * @Route("/{id}", name="consultant_show", methods={"GET"})
      */
-    public function display()
+    public function show(Consultant $consultant): Response
     {
-
-        $consultants = $this->getDoctrine()->getRepository(Consultant::class)->findAll();
-
-        return $this->render('consultant/consultant.html.twig', [
-            'consultants' => $consultants,
+        return $this->render('consultant/show.html.twig', [
+            'consultant' => $consultant,
         ]);
     }
 
     /**
-     * @Route("/consultant/edit/{id}", name="consultant_edit")
+     * @Route("/{id}/edit", name="consultant_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request,$id)
+    public function edit(Request $request, Consultant $consultant): Response
     {
-        $consultant = new Consultant();
-
-        $consultant = $this->getDoctrine()->getRepository(Consultant::class)->find($id);
-
-        $form = $this->createFormBuilder($consultant)
-            ->add('cNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Technician')))
-            ->add('cFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Technician')))
-            ->add('cLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Technician')))
-            ->add('cAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Technician')))
-            ->add('cGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
-            ->add('cDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
-            ->add('cPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('cRole', ChoiceType::class, array('choices' => [ 'Main Consultant' =>  'Main Consultant', 'Assistant Consultant' => 'Assistant Consultant'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('cStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
-            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
-                new File([
-                    'maxSize' => '2048k',
-                    'mimeTypes' => [
-                        'image/jpeg',
-                        'image/png',
-                        'image/gif',
-                        'image/tiff',
-                        'image/bmp',
-                        'image/other',
-                    ],
-                    'mimeTypesMessage' => "Please upload photo less than 2MB.",   
-                    ])
-                ),
-            ))
-            ->add('captchaCode', CaptchaType::class, array(
-                'captchaConfig' => 'ExampleCaptchaUserRegistration',
-                'label' => 'Retype the characters from the picture',
-                'constraints' => [
-                    new ValidCaptcha ([
-                        'message' => 'Invalid captcha, please try again',
-                    ]),
-                ],
-            ))
-            ->add('save', SubmitType::class, array('label'=> 'Update', 'attr' => array('class' => 'btn btn-primary mt-3')))
-            ->getForm();
-
+        $form = $this->createForm(ConsultantType::class, $consultant,['edit_mode' => true,]);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
@@ -201,13 +119,29 @@ class ConsultantController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            return $this->redirectToRoute('consultants_list');
+            return $this->redirectToRoute('consultant_index');
         }
-        return $this->render('consultant/consultant_edit.html.twig', [
+        return $this->render('consultant/edit.html.twig', [
+            'consultant' => $consultant,
             'form' => $form->createView(),
         ]);
     }
 
+    /**
+     * @Route("/{id}", name="consultant_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Consultant $consultant): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$consultant->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($consultant);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('consultant_index');
+    }
+
+    /*
     public function searchBarAction()
     {
         $form = $this->createFormBuilder(null)
@@ -220,25 +154,28 @@ class ConsultantController extends AbstractController
         ]);    
         
     }
+    */
 
     /**
      * @Route("/search", name="ajax_search")
      */
-    public function searchAction(Request $request)
+    public function search(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $requestString = $request->get('q');
         $consultants = $entityManager->getRepository(Consultant::class)->findEntitiesByString($requestString);
         if(!$consultants)
         {
-            $result['consultants']['error'] = "Consultant not found :( ";
-            var_dump("hello");
+            $result['consultants']['error'] = "Consultant not found";
+            //var_dump("hello");
         }
         else
         {
+            //check
             $result['consultants'] = $this->getRealEntities($consultants);
-        }
-        
+
+        } 
+        //check 
         return new Response(json_encode($result));
     }
 
@@ -246,10 +183,93 @@ class ConsultantController extends AbstractController
     {
         foreach($consultants as $consultants)
         {
-            $realEntities[$consultants->getId()] = [$consultants->getCFirstName(), $consultants->getCLastName()];
+            $realEntities[$consultants->getId()] = [$consultants->getCFirstName()];
         }
         return $realEntities;
     }
+
+
+    /**
+    * @Route("/department", name="consultant_getDepartment", methods={"GET","POST"})
+    */
+    public function getDepartment(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Hospital');
+        $hospital = $repository->findOneById($id);
+        dump($hospital);
+ 
+        $departments = $hospital->getDepartments();
+        
+        $responseArray = array();
+        foreach($departments as $department){
+            $responseArray[] = array(
+                "id" => $department->getId(),
+                "name" => $department->getDepartmentName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
+    }
+
+    
+    /**
+    * @Route("/unit", name="consultant_getUnit", methods={"GET","POST"})
+    */
+    
+    public function getUnit(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Department');
+        $department = $repository->findOneById($id);
+        dump($department);
+ 
+        $units = $department->getUnits();
+        
+        $responseArray = array();
+        foreach($units as $unit){
+            $responseArray[] = array(
+                "id" => $unit->getId(),
+                "name" => $unit->getUnitName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
+    }
+
+    /**
+    * @Route("/ward", name="consultant_getWard", methods={"GET","POST"})
+    */
+    
+    public function getWard(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Unit');
+        $unit = $repository->findOneById($id);
+        dump($unit);
+ 
+        $wards = $unit->getWards();
+        
+        $responseArray = array();
+        foreach($wards as $ward){
+            $responseArray[] = array(
+                "id" => $ward->getId(),
+                "name" => $ward->getWardName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
+    }
+
 
 }
 

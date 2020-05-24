@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ICU Report index{% endblock %}
+
+{% block body %}
+    <section class="ftco-section">
+    {% if icureports %}           
+        <table class="table table-hover table-avatar table-valign-middle table-head-fixed table-responsive-xl">
+            <thead>
+                <tr class="table">
+                    <th scope="col"><p>Patient Name</p></th>
+                    <th scope="col"><p>Admit Date</p></th>
+                    <th scope="col"><p>Code</p></th>
+                    <th scope="col"><p>Room</p></th>
+                    <th scope="col"><p>Diagnosies</p></th>
+                    <th scope="col"><p>Neuro</p></th>
+                    <th scope="col"><p>Cardiac</p></th>
+                    <th scope="col"><p>Respiratory</p></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for icureport in icureports %}
+                    <tr>
+                        <td><h7><a href="{{path('icureport_show',{'id': icureport.id })}}">{{ icureport.Patient }}</a></h7></td>
+                        <td><p>{{ icureport.AdmitDate|date('d-m-Y') }}</p></td>
+                        <td><p>{{ icureport.Code }}</p></td>
+                        <td><p>{{ icureport.Room }}</p></td>
+                        <td><p>{{ icureport.Diagnosis }}</p></td>
+                        <td><p>{{ icureport.Neuro }}</p></td>
+                        <td><p>{{ icureport.Cardiac }}</p></td>
+                        <td><p>{{ icureport.Respiratory }}</p></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>          
+    {% else %}
+        <p align="center">No ICU Reports to display.</p>
+    {% endif %}
+        <p align="center" class="button-custom"><a href="icu/add" class="btn btn-secondary py-2 px-3">Add new ICU Report</a></p>
+    </section>
+{% endblock %}

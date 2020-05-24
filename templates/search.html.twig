@@ -1,19 +1,34 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container">
-    <div class="sidebar-search">
-        <div class="input-group">
-            <input id="search" type="text" class="input-sm form-control" placeholder="Search here..">
-        </div>
-    </div>    
-    <ul class="nav" id="side-menu">
-        <li>
-            <a href="#">Entities<span class="fa arrow"></span></a>
-            <ul class="nav" id="entitiesNav"></ul>
-        </li>
-    </ul>
-
+    <div class="container">
+        <div class="sidebar-search">
+            <div class="input-group">
+                <form class="form-inline ml-5">
+                    <div class="input-group input-group-sm search-form">
+                        <input id="search" type="text" class="form-control form-control-navbar" type="search" placeholder="Search here.." aria-label="Search" style="font-size: 17px;" size="40">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <!-- <input id="search" type="text" class="form-control" placeholder="Search here.."> -->
+            </div>
+        </div>    
+        <ul class="nav" id="side-menu">
+            <li>
+                <a href="#">Results<span class="fa arrow"></span></a>
+                <div class="row">
+                    <ul class="nav" id="entitiesNav"></ul></br>
+                </div>
+            </li>
+        </ul>
+    </div>
+{% endblock %}  
+ 
+{% block javascripts %}
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script type="text/javascript">
@@ -31,41 +46,38 @@
                     if(searchRequest == null) {
                         console.log("test4");
                     }
-                    if(searchRequest != null) {
+                    if(searchRequest != null) 
                         //console.log("test5");
                         searchRequest.abort();
                         //console.log("test3");
-                        searchRequest = $.ajax({
-                            type: "GET",
-                            url: "{{ path('ajax_search') }}",
-                            data: {
-                                'q': value
-                            },
-                            dataType: "text",
-                            success: function(msg) {
-                                if(value === $(that).val()) {
-                                    var result = JSON.parse(msg);
-                                    $.each(result, function(key, arr) {
-                                        $.each(arr, function(id, value) {
-                                            if(key === 'consultants') {
-                                                if(id !== 'error') {
-                                                    console.log(value[1]);
-                                                    entitySelector.append('<li><b>'+value[1]+'</b><a href="/consultant/edit/'+id+'">'+'<p>'+value[0]+'</p>'+'</a></li>');              
-                                                } else {
-                                                    entitySelector.append('<li class="errorLi">'+value+'</li>');
-                                                }
+                    searchRequest = $.ajax({
+                        type: "GET",
+                        url: "{{ path('ajax_search') }}",
+                        data: {
+                            'q': value
+                        },
+                        dataType: "text",
+                        success: function(msg) {
+                            if(value === $(that).val()) {
+                                var result = JSON.parse(msg);
+                                $.each(result, function(key, arr) {
+                                    $.each(arr, function(id, value) {
+                                        if(key === 'consultants') {
+                                            if(id !== 'error') {
+                                                console.log(value[1]);
+                                                entitySelector.append('<li><a href="/consultant/'+id+'">'+'<p>'+value[0]+'</p>'+'</a></li>');              
+                                            } else {
+                                                entitySelector.append('<li>'+value+'</li>');
                                             }
-                                        });
+                                        }
                                     });
-                                }
+                                });
                             }
-                        });
-                    }
+                        }
+                    });    
                 }
             });
         });
     </script>
-
-</div>
-    
+ 
 {% endblock %}

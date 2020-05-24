@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hospital index{% endblock %}
+
+{% block body %}
+    <section class="ftco-section">
+        {% if hospitals %}
+        <div class="container">
+            <div class="row">
+                {% for hospital in hospitals %}
+                <div class="col-md-6 col-lg-3 ftco-animate">
+                    <div class="staff">  
+                        <div class="text pt-3 text-center">
+                            <h3><a href="{{ path('hospital_show',{'id': hospital.id })}}">{{  hospital.Name }}</a></h3>
+                            <div class="faded">
+                                <p>{{  hospital.Name }}</p>
+                                <ul class="ftco-social text-center">
+                                    <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                                    <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                                    <li class="ftco-animate"><a href="#"><span class="icon-google-plus"></span></a></li>
+                                    <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p align="center">No hospital to display.</p>
+        {% endif %}
+        <p align="center" class="button-custom"><a href="{{path('hospital_add')}}" class="btn btn-secondary py-2 px-3">Add new Hospital</a></p>    
+    </section>
+{% endblock %}

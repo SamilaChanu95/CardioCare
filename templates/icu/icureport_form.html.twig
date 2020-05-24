@@ -1,0 +1,114 @@
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_10.jpg') }}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h2 class="breadcrumb-item"><b>ICU Report's details</b></h2>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div class="container1">
+        <div class="card card-4">
+            <div class="card-body">
+                <h4 class="title">Personal Information</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 m-md-auto ftco-animate">		   
+                    {{ form_start(form) }}
+                        <div class="form-row">                
+                            <div class="form-group col-md-6">
+                                <label class="label">Patient Name</label>
+                                {{ form_row(form.Patient) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">  
+                                <div class="input-group form-group">
+                                    <label class="label">Admit Date</label>
+                                    {{ form_row(form.AdmitDate) }}
+                                </div>    
+                            </div>                
+                            <div class="form-group col-md-3">
+                                <label class="label">Patient's Room Number</label>
+                                {{ form_row(form.Room) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Report's Code Number</label>
+                                {{ form_row(form.Code) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Diagnosis Information</label>
+                                {{ form_row(form.Diagnosis) }}
+                            </div>              
+                            <div class="form-group col-md-3">
+                                <label class="label">Neuro Information</label>
+                                {{ form_row(form.Neuro) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Cardiac Information</label>
+                                {{ form_row(form.Cardiac) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="label">Respiratory Information</label>
+                                {{ form_row(form.Respiratory) }}
+                            </div>              
+                            <div class="form-group col-md-3">
+                                <label class="label">Ventilator Information</label>
+                                {{ form_row(form.Ventilator) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="label">GI</label>
+                                {{ form_row(form.GI) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="label">GU</label>
+                                {{ form_row(form.GU) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="label">Skin</label>
+                                {{ form_row(form.Skin) }}
+                            </div>
+                        </div>
+                        <div class="form-row">             
+                            <div class="form-group col-md-3">
+                                <label class="label">Drains</label>
+                                {{ form_row(form.Drains) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="label">Labs</label>
+                                {{ form_row(form.Labs) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Meds</label>
+                                {{ form_row(form.Meds) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Hemodynamics</label>
+                                {{ form_row(form.Hemodynamics) }}
+                            </div>
+                        </div>
+                        <div class="form-row">             
+                            <div class="form-group col-md-4">
+                                <label class="label">ToDo List</label>
+                                {{ form_row(form.ToDo) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="label">Core Measures</label>
+                                {{ form_row(form.CoreMeasures) }}
+                            </div>
+                        </div>
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                    </div>
+                </div>     
+            </div>
+        </div>
+    </div>
+</section>

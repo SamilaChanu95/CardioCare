@@ -59,6 +59,12 @@ class Consultant
     private $cRole;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Hospital", inversedBy="consultants")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Hospital;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="consultants")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -207,6 +213,18 @@ class Consultant
     public function setCRole(string $cRole): self
     {
         $this->cRole = $cRole;
+
+        return $this;
+    }
+
+    public function getHospital(): ?Hospital
+    {
+        return $this->Hospital;
+    }
+
+    public function setHospital(?Hospital $Hospital): self
+    {
+        $this->Hospital = $Hospital;
 
         return $this;
     }

@@ -1,0 +1,49 @@
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_9.jpg') }}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h2 class="breadcrumb-item"><b>Qualified Nurses</b></h2>
+            </div>
+        </div>
+    </div>
+</section>
+    
+<section class="ftco-section">
+    {% if nurses %}
+    <div class="container">
+        <div class="row">
+            {% for nurse in nurses %}
+                <div class="col-md-6 col-lg-3 ftco-animate">
+                    <div class="staff">
+                            <div class="img-wrap d-flex align-items-stretch">
+                                {% if nurse.photo %}
+                                    <div class="img align-self-stretch" style="background-image: url('{{ asset('uploads/photos/' ~ nurse.photo) }}');"></div>
+                                {% else %}  
+                                    <div class="img align-self-stretch" style="background-image: url('{{ asset('images/default_user.png') }}');"></div>  
+                                {% endif %}    
+                            </div>
+                        <div class="text pt-3 text-center">
+                            <h3><a href="{{ path('nurse_show',{'id':nurse.id })}}">{{  nurse.nFirstName }}</a></h3>
+                            <span class="position mb-2">{{  nurse.nAddress }}</span>
+                            <div class="faded">
+                                <p>{{  nurse.nRole }}</p>
+                                <p>{{  nurse.nPhoneNumber }}</p>
+                                <ul class="ftco-social text-center">
+                                    <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                                    <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                                    <li class="ftco-animate"><a href="#"><span class="icon-google-plus"></span></a></li>
+                                    <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <p align="center">No nurses to display.</p>
+    {% endif %}
+    <p align="center" class="button-custom"><a href="{{path('nurse_add')}}" class="btn btn-secondary py-2 px-3">Add new Nurse</a></p>    
+</section>

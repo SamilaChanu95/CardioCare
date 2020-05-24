@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Nurse;
+use App\Form\NurseType;
 use App\Entity\Department;
 use App\Entity\Unit;
 use App\Entity\Ward;
+use App\Entity\Nurse;
+use App\Repository\NurseRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,69 +25,30 @@ use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+* @Route("/nurse")
+*/
 class NurseController extends AbstractController
 {
     /**
-     * @Route("/nurse", name="nurses_list")
+     * @Route("/", name="nurse_index", methods={"GET"})
      */
-    public function display()
+    public function index(NurseRepository $nurseRepository): Response
     {
-
-        $nurses = $this->getDoctrine()->getRepository(Nurse::class)->findAll();
-
         return $this->render('nurse/nurse.html.twig', [
-            'nurses' => $nurses,
+            'nurses' => $nurseRepository->findAll(),
         ]);
     }
 
     /**
-     * @Route("/nurse/add", name="nurse_add")
+     * @Route("/add", name="nurse_add", methods={"GET","POST"})
      */
-    public function createNurse(Request $request)
+    public function createNurse(Request $request):Response
     {
         $nurse = new Nurse();
-
-        $form = $this->createFormBuilder($nurse)
-            ->add('nNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Nurse')))
-            ->add('nFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Nurse')))
-            ->add('nLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Nurse')))
-            ->add('nAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Nurse')))
-            ->add('nGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
-            ->add('nDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
-            ->add('nPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('nRole', ChoiceType::class, array('choices' => [ 'Main Nurse' =>  'Main Nurse', 'Assistant Nurse' => 'Assistant Nurse', 'Nurse Anaesthetist' => 'Nurse Anaesthetist'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('nStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
-            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
-                new File([
-                    'maxSize' => '2048k',
-                    'mimeTypes' => [
-                        'image/jpeg',
-                        'image/png',
-                        'image/gif',
-                        'image/tiff',
-                        'image/bmp',
-                        'image/other',
-                    ],
-                    'mimeTypesMessage' => "Please upload photo less than 2MB.",   
-                    ])
-                ),
-            ))
-            ->add('captchaCode', CaptchaType::class, array(
-                'captchaConfig' => 'ExampleCaptchaUserRegistration',
-                'label' => 'Retype the characters from the picture',
-                'constraints' => [
-                    new ValidCaptcha ([
-                        'message' => 'Invalid captcha, please try again',
-                    ]),
-                ],
-            ))
-            ->add('save', SubmitType::class, array('label'=> 'Create', 'attr' => array('class' => 'btn btn-primary mt-3')))
-            ->getForm();
-
+        $form = $this->createForm(NurseType::class, $nurse,['edit_mode' => false,]);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
@@ -113,62 +76,31 @@ class NurseController extends AbstractController
             $entityManager->persist($nurse);
             $entityManager->flush(); 
 
-            return $this->redirectToRoute('nurses_list');
+            return $this->redirectToRoute('nurse_index');
         }
 
-        return $this->render('nurse/nurse_add.html.twig',array('form' => $form->createView()));    
+        return $this->render('nurse/new.html.twig',array(
+            'nurse' => $nurse,
+            'form' => $form->createView()
+        ));    
     }
 
+    /**
+     * @Route("/{id}", name="nurse_show", methods={"GET"})
+     */
+    public function show(Nurse $nurse): Response
+    {
+        return $this->render('nurse/show.html.twig', [
+            'nurse' => $nurse,
+        ]);
+    }
 
     /**
-     * @Route("/nurse/edit/{id}", name="nurse_edit")
+     * @Route("/{id}/edit", name="nurse_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request,$id)
+    public function edit(Request $request, Nurse $nurse): Response
     {
-        $nurse = new Nurse();
-
-        $nurse = $this->getDoctrine()->getRepository(Nurse::class)->find($id);
-
-        $form = $this->createFormBuilder($nurse)
-            ->add('nNIC', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Nurse')))
-            ->add('nFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Nurse')))
-            ->add('nLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Nurse')))
-            ->add('nAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Nurse')))
-            ->add('nGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
-            ->add('nDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
-            ->add('nPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('nRole', ChoiceType::class, array('choices' => [ 'Main Nurse' =>  'Main Nurse', 'Assistant Nurse' => 'Assistant Nurse', 'Nurse Anaesthetist' => 'Nurse Anaesthetist'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('nStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
-            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
-                new File([
-                    'maxSize' => '2048k',
-                    'mimeTypes' => [
-                        'image/jpeg',
-                        'image/png',
-                        'image/gif',
-                        'image/tiff',
-                        'image/bmp',
-                        'image/other',
-                    ],
-                    'mimeTypesMessage' => "Please upload photo less than 2MB.",   
-                    ])
-                ),
-            ))      
-            ->add('captchaCode', CaptchaType::class, array(
-                'captchaConfig' => 'ExampleCaptchaUserRegistration',
-                'label' => 'Retype the characters from the picture',
-                'constraints' => [
-                    new ValidCaptcha ([
-                        'message' => 'Invalid captcha, please try again',
-                    ]),
-                ],
-            ))
-            ->add('save', SubmitType::class, array('label'=> 'Update', 'attr' => array('class' => 'btn btn-primary mt-3')))
-            ->getForm();
-
+        $form = $this->createForm(NurseType::class, $nurse,['edit_mode' => true,]);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
@@ -195,12 +127,108 @@ class NurseController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            return $this->redirectToRoute('nurses_list');
+            return $this->redirectToRoute('nurse_index');
         }
         
-        return $this->render('nurse/nurse_edit.html.twig', [
-            'form' => $form->createView()
+        return $this->render('nurse/edit.html.twig', [
+            'nurse' => $nurse,
+            'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/{id}", name="nurse_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Nurse $nurse): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$nurse->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($nurse);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('nurse_index');
+    }
+
+    /**
+    * @Route("/department", name="nurse_getDepartment", methods={"GET","POST"})
+    */
+    public function getDepartment(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Hospital');
+        $hospital = $repository->findOneById($id);
+        dump($hospital);
+ 
+        $departments = $hospital->getDepartments();
+        
+        $responseArray = array();
+        foreach($departments as $department){
+            $responseArray[] = array(
+                "id" => $department->getId(),
+                "name" => $department->getDepartmentName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
+    }
+
+    
+    /**
+    * @Route("/unit", name="nurse_getUnit", methods={"GET","POST"})
+    */
+    
+    public function getUnit(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Department');
+        $department = $repository->findOneById($id);
+        dump($department);
+ 
+        $units = $department->getUnits();
+        
+        $responseArray = array();
+        foreach($units as $unit){
+            $responseArray[] = array(
+                "id" => $unit->getId(),
+                "name" => $unit->getUnitName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
+    }
+
+    /**
+    * @Route("/ward", name="nurse_getWard", methods={"GET","POST"})
+    */
+    
+    public function getWard(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Unit');
+        $unit = $repository->findOneById($id);
+        dump($unit);
+ 
+        $wards = $unit->getWards();
+        
+        $responseArray = array();
+        foreach($wards as $ward){
+            $responseArray[] = array(
+                "id" => $ward->getId(),
+                "name" => $ward->getWardName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
     }
 
 }

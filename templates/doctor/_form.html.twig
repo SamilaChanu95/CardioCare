@@ -1,0 +1,111 @@
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_5.jpg') }}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h2 class="breadcrumb-item"><b>Doctor's details</b></h2>
+            </div>
+        </div>
+    </div>
+</section>
+		
+<section class="ftco-section">
+    <div class="container1">
+        <div class="card card-4">
+            <div class="card-body">
+                <h4 class="title">Personal Information</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 m-md-auto ftco-animate">		   
+                    {{ form_start(form) }}  
+                        <div class="form-row">
+                            <div class="col-2">  
+                                <div class="input-group form-group">
+                                    <label class="label">NIC Number</label>
+                                        {{ form_row(form.dNIC) }}
+                                    </div>    
+                                </div>
+                            </div>
+                        <div class="form-row">                
+                            <div class="form-group col-md-6">
+                                <label class="label">First Name</label>
+                                {{ form_row(form.dFirstName) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="label">Last Name</label>
+                                {{ form_row(form.dLastName) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="label">Date of Birth</label>
+                                {{ form_row(form.dDOB) }}
+                            </div>
+                             <div class="form-group col-md-2">
+                                <label class="label">Gender</label>
+                                {{ form_row(form.dGender) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Phone Number</label>
+                                {{ form_row(form.dPhoneNumber) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="label">Address</label>
+                                {{ form_row(form.dAddress) }}
+                            </div>
+                        </div>
+                        <hr>
+                        <h4 class="title">Other Information</h4>
+                        <hr>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Role</label>
+                                {{ form_row(form.dRole) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Hospital</label>
+                                {{ form_row(form.Hospital) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Select your department</label>
+                                {{ form_row(form.Department) }} {# <select id="app_doctor_department" ... #}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Select your unit</label>
+                                {{ form_row(form.Unit) }} {# <select id="app_doctor_unit" ... #}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Ward</label>
+                                {{ form_row(form.Ward) }}
+                            </div>
+                        </div> 
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Status</label>
+                                {{ form_row(form.dStatus) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Upload user photo</label>
+                                {{ form_row(form.photo) }}
+                            </div>
+                        </div> 
+                        {{ form_widget(form) }}
+                        {{ form_end(form) }}
+                    </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

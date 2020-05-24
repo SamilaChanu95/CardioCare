@@ -1,0 +1,22 @@
+<div class="card">
+    <div class="card-body login-card-body">               
+        <p class="login-box-msg">Password Change</p>
+                            
+        {{ form_start(form) }}
+
+            {{ form_row(form.username) }}
+            {{ form_row(form.plainPassword.first) }}
+            {{ form_row(form.plainPassword.second) }}
+
+            <div class="row">
+                <div class="col-4 m-md-auto">
+                    <button type="button" class="btn btn-light btn-block" ><a href="/login">Cancel</a></button>
+                </div>
+                <div class="col-4 m-md-auto">
+                    <button type="submit" class="btn btn-primary btn-block" >Update</button>
+                </div>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>

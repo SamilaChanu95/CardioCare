@@ -46,12 +46,18 @@ class Unit
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="units")
      */
-    protected $Department;
+    private $Department;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Ward", mappedBy="Unit")
      */
     private $wards;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Hospital", inversedBy="units")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Hospital;
 
     public function __construct()
     {
@@ -247,6 +253,18 @@ class Unit
                 $ward->setUnit(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHospital(): ?Hospital
+    {
+        return $this->Hospital;
+    }
+
+    public function setHospital(?Hospital $hospital): self
+    {
+        $this->Hospital = $hospital;
 
         return $this;
     }

@@ -59,6 +59,12 @@ class Nurse
     private $nRole;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Hospital", inversedBy="nurses")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Hospital;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="nurses")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -207,6 +213,18 @@ class Nurse
     public function setNRole(string $nRole): self
     {
         $this->nRole = $nRole;
+
+        return $this;
+    }
+
+    public function getHospital(): ?Hospital
+    {
+        return $this->Hospital;
+    }
+
+    public function setHospital(?Hospital $Hospital): self
+    {
+        $this->Hospital = $Hospital;
 
         return $this;
     }

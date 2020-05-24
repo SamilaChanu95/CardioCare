@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Doctor;
 use App\Entity\Department;
+use App\Entity\Hospital;
 use App\Entity\Unit;
 use App\Entity\Ward;
 use Symfony\Component\Form\AbstractType;
@@ -36,25 +37,13 @@ use Symfony\Component\Validator\Constraints\File;
 
 class DoctorType extends AbstractType
 {
-    private $em;
-
-    /**
-     * The Type requires the EntityManager as argument in the constructor. It is autowired
-     * in Symfony 3.
-     * 
-     * @param EntityManagerInterface $em
-     */
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+        $label="Create";
+        if ($options['edit_mode']==true )
+        {
+            $label="Update";
+        }
         $builder
             ->add('dNIC', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Doctor')))
             ->add('dFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Doctor')))
@@ -64,6 +53,9 @@ class DoctorType extends AbstractType
             ->add('dDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
             ->add('dPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
             ->add('dRole', ChoiceType::class, array('choices' => [ 'Main Doctor' =>  'Main Doctor', 'Assistant Doctor' => 'Assistant Doctor', 'Doctor Anaesthetist' => 'Doctor Anaesthetist'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('Hospital', EntityType::class, array('class' => Hospital::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
+            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
             ->add('dStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
             ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 
@@ -91,78 +83,18 @@ class DoctorType extends AbstractType
                     ]),
                 ],
             ))
-            ->add('submit', SubmitType::class, array('label'=> 'Create', 'attr' => array('class' => 'btn btn-primary mt-3')));
-        
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
+            ->add('submit', SubmitType::class, array('label'=> 'Create', 'attr' => array('class' => 'btn btn-primary mt-3')))
+        ;
 
     }
 
-    protected function addElements(FormInterface $form, Department $department = null) {
-
-        $form->add('Department', EntityType::class, array(
-            'required' => true,
-            'data' => $department,
-            'class' => Department::class,
-            'label' => false,
-            'attr' => array('class' => 'form-control')
-        ));
-
-        $units = array();
-
-        if ($department) {
- 
-            $repoUnit = $this->em->getRepository(Unit::class);
-
-            $units = $this->$repoUnit->createQueryBuilder("q")
-                ->where("q.Department = :departmentid")
-                ->setParameter("departmentid", $department->getId())
-                ->getQuery()
-                ->getResult();
-        }
-
-        $form->add('Unit', EntityType::class, array(
-            'class' => Unit::class,
-            'required' => true,
-            'label' => false,
-            'attr' => array('class' => 'form-control'),
-            'choices' => $units
-        ));
-    }
-
-    function onPreSubmit(FormEvent $event) {
-        $form = $event->getForm();
-        $data = $event->getData();
-        
-        // Search for selected Department and convert it into an Entity
-        $department = $this->em->getRepository(Department::class)->find($data['department']);
-        
-        $this->addElements($form, $department);
-    }
-
-    function onPreSetData(FormEvent $event) {
-        $doctor = $event->getData();
-        $form = $event->getForm();
-
-        // When you create a new doctor, the Department is always empty
-        $department = $doctor->getDepartment() ? $doctor->getDepartment() : null;
-        
-        $this->addElements($form, $department);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
+    
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Doctor::class
+            'data_class' => Doctor::class,'edit_mode' => false,
         ));
-    }
 
-    public function getBlockPrefix()
-    {
-        return 'app_doctor';
+        $resolver->setAllowedTypes('edit_mode', 'bool');
     }
-
 }

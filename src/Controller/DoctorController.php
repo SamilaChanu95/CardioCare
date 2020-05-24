@@ -29,30 +29,28 @@ use Symfony\Component\Mime\MimeTypes;
 use App\Form\DoctorType;
 use Symfony\Component\Validator\Constraints\File;
 
+/**
+* @Route("/doctor")
+*/
 class DoctorController extends AbstractController
 {
     /**
-     * @Route("/doctor", name="doctors_list")
+     * @Route("/", name="doctor_index", methods={"GET"})
      */
-    public function display()
+    public function index(DoctorRepository $doctorRepository): Response
     {
-
-        $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findAll();
-        
         return $this->render('doctor/doctor.html.twig', [
-            'doctors' => $doctors,
+            'doctors' => $doctorRepository->findAll(),
         ]);
-    }
+    } 
 
     /**
-     * @Route("/doctor/add", name="doctor_add")
+     * @Route("/add", name="doctor_add", methods={"GET","POST"})
      */
     public function createDoctor(Request $request): Response
     {
         $doctor = new Doctor();
-
-        $form = $this->createForm(DoctorType::class, $doctor);
-            
+        $form = $this->createForm(DoctorType::class, $doctor,['edit_mode' => false,]);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
@@ -83,64 +81,32 @@ class DoctorController extends AbstractController
             $entityManager->persist($doctor);
             $entityManager->flush(); 
 
-            return $this->redirectToRoute('doctors_list');
+            return $this->redirectToRoute('doctor_index');
         }
         
-        return $this->render('doctor/doctor_add.html.twig', [
+        return $this->render('doctor/new.html.twig', [
+            'doctor' => $doctor,
             'form' => $form->createView()
         ]);
         
     }
 
     /**
-     * @Route("/doctor/edit/{id}", name="doctor_edit")
+     * @Route("/{id}", name="doctor_show", methods={"GET"})
      */
-    public function edit(Request $request,$id)
+    public function show(Doctor $doctor): Response
     {
-        $doctor = new Doctor();
+        return $this->render('doctor/show.html.twig', [
+            'doctor' => $doctor,
+        ]);
+    }
 
-        $doctor = $this->getDoctrine()->getRepository(Doctor::class)->find($id);
-
-        $form = $this->createFormBuilder($doctor)
-            ->add('dNIC', TextType::class, array('required' => true,'label' => false,'attr' => array('class' => 'form-control', 'placeholder' => 'NIC of Doctor')))
-            ->add('dFirstName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'First Name of Doctor')))
-            ->add('dLastName', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Last Name of Doctor')))
-            ->add('dAddress', TextareaType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Address of Doctor')))
-            ->add('dGender', ChoiceType::class, array('choices' => [ 'Gender' => [ 'Male' => 'Male', 'Female' => 'Female']],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Gender')))
-            ->add('dDOB', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Date of Birth')))
-            ->add('dPhoneNumber', TextType::class, array('required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Phone Number')))
-            ->add('dRole', ChoiceType::class, array('choices' => [ 'Main Doctor' =>  'Main Doctor', 'Assistant Doctor' => 'Assistant Doctor', 'Doctor Anaesthetist' => 'Doctor Anaesthetist'],'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Department', EntityType::class, array('class' => Department::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Unit', EntityType::class, array('class' => Unit::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('Ward', EntityType::class, array('class' => Ward::class, 'required' => true,'label' => false,'attr' => array('class' => 'form-control')))
-            ->add('dStatus', ChoiceType::class, array('choices' => [ 'Active' => 'Active', 'Deactive' => 'Deactive'],'required' => true,'label' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Status')))
-            ->add('photo', FileType::class, array('required' => false, 'mapped' => false, 'label' => false, 'constraints' => array(
-                new File([
-                    'maxSize' => '2048k',
-                    'mimeTypes' => [
-                        'image/jpeg',
-                        'image/png',
-                        'image/gif',
-                        'image/tiff',
-                        'image/bmp',
-                        'image/other',
-                    ],
-                    'mimeTypesMessage' => "Please upload photo less than 2MB.",   
-                    ])
-                ),
-            ))
-            ->add('captchaCode', CaptchaType::class, array(
-                'captchaConfig' => 'ExampleCaptchaUserRegistration',
-                'label' => 'Retype the characters from the picture',
-                'constraints' => [
-                    new ValidCaptcha ([
-                        'message' => 'Invalid captcha, please try again',
-                    ]),
-                ],
-            ))
-            ->add('save', SubmitType::class, array('label'=> 'Update', 'attr' => array('class' => 'btn btn-primary mt-3')))
-            ->getForm();
-
+    /**
+     * @Route("/{id}/edit", name="doctor_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, Doctor $doctor): Response
+    {
+        $form = $this->createForm(DoctorType::class, $doctor,['edit_mode' => true,]);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
@@ -167,12 +133,27 @@ class DoctorController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            return $this->redirectToRoute('doctors_list');
+            return $this->redirectToRoute('doctor_index');
         }
 
-        return $this->render('doctor/doctor_edit.html.twig', [
-            'form' => $form->createView()
+        return $this->render('doctor/edit.html.twig', [
+            'doctor' => $doctor,
+            'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/{id}", name="doctor_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Doctor $doctor): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$doctor->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($doctor);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('doctor_index');
     }
 
 
@@ -191,7 +172,7 @@ class DoctorController extends AbstractController
         // Search the units that belongs to the department with the given id as GET parameter "departmentid"
         $units = $this->$unitsRepository->createQueryBuilder("q")
             ->where("q.Department = :departmentid")
-            ->setParameter("departmentid", $request->query->get("department.id"))
+            ->setParameter("departmentid", $request->query->get("departmentid"))
             ->getQuery()
             ->getResult();
         
@@ -210,6 +191,87 @@ class DoctorController extends AbstractController
 
         // e.g
         // [{"id":"3","name":"Treasure Island"},{"id":"4","name":"Presidio of San Francisco"}]
+    }
+
+    /**
+    * @Route("/department", name="doctor_getDepartment", methods={"GET","POST"})
+    */
+    public function getDepartment(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Hospital');
+        $hospital = $repository->findOneById($id);
+        dump($hospital);
+ 
+        $departments = $hospital->getDepartments();
+        
+        $responseArray = array();
+        foreach($departments as $department){
+            $responseArray[] = array(
+                "id" => $department->getId(),
+                "name" => $department->getDepartmentName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
+    }
+
+    
+    /**
+    * @Route("/unit", name="doctor_getUnit", methods={"GET","POST"})
+    */
+    
+    public function getUnit(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Department');
+        $department = $repository->findOneById($id);
+        dump($department);
+ 
+        $units = $department->getUnits();
+        
+        $responseArray = array();
+        foreach($units as $unit){
+            $responseArray[] = array(
+                "id" => $unit->getId(),
+                "name" => $unit->getUnitName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
+    }
+
+    /**
+    * @Route("/ward", name="doctor_getWard", methods={"GET","POST"})
+    */
+    
+    public function getWard(Request $request)
+    {
+        $id=$request->get("id");
+        dump($id);
+        // Get Entity manager and repository
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository('App\Entity\Unit');
+        $unit = $repository->findOneById($id);
+        dump($unit);
+ 
+        $wards = $unit->getWards();
+        
+        $responseArray = array();
+        foreach($wards as $ward){
+            $responseArray[] = array(
+                "id" => $ward->getId(),
+                "name" => $ward->getWardName()
+            );
+        }
+      
+        return new JsonResponse($responseArray);
     }
 
 }

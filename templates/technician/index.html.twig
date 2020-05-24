@@ -1,0 +1,49 @@
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_20.jpg') }}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h2 class="breadcrumb-item"><b>Qualified Technicians</b></h2>
+            </div>
+        </div>
+    </div>
+</section>
+		
+<section class="ftco-section">
+    {% if technicians %}
+    <div class="container">
+        <div class="row">
+            {% for technician in technicians %}
+            <div class="col-md-6 col-lg-3 ftco-animate">
+                <div class="staff">
+                    <div class="img-wrap d-flex align-items-stretch">
+                        {% if technician.photo %}
+                            <div class="img align-self-stretch" style="background-image: url('{{ asset('uploads/photos/' ~ technician.photo) }}');"></div>
+                        {% else %}  
+                            <div class="img align-self-stretch" style="background-image: url('{{ asset('images/default_user.png') }}');"></div>  
+                        {% endif %} 
+                    </div>
+                    <div class="text pt-3 text-center">
+                        <h3><a href="{{ path('technician_show',{'id':technician.id })}}">{{  technician.tFirstName }}</a></h3>  
+                        <span class="position mb-2">{{ technician.tAddress }}</span>
+                        <div class="faded">
+                            <p>{{  technician.tRole }}</p>
+                            <p>{{  technician.tPhoneNumber }}</p>
+                            <ul class="ftco-social text-center">
+                                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                                <li class="ftco-animate"><a href="#"><span class="icon-google-plus"></span></a></li>
+                                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>             
+    {% else %}
+    <p align="center">No technicians to display.</p>
+    {% endif %}
+    <p align="center" class="button-custom"><a href="{{ path('technician_add') }}" class="btn btn-secondary py-2 px-3">Add new Technician</a></p>
+</section>

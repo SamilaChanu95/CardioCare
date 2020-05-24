@@ -1,0 +1,139 @@
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_18.jpg') }}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h1 class="breadcrumb-item"><b>Surgery Patient's details</b></h2>
+            </div>
+        </div>
+    </div>
+</section>
+		
+<section class="ftco-section">
+    <div class="container1">
+        <div class="card card-4">
+            <div class="card-body">
+                <h4 class="title">Personal Information</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 m-md-auto ftco-animate">	   
+                    {{ form_start(form) }}  
+                        <div class="form-row">
+                            <div class="col-6">  
+                                <div class="input-group form-group col-md-6">
+                                    <label class="label">NIC Number</label>
+                                    {{ form_row(form.pNIC) }}
+                                </div> 
+                            </div>     
+                            <div class="col-2">
+                                <div class="input-group form-group">
+                                    <label class="label">Patient Type</label>
+                                    {{ form_row(form.PatientType) }}
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="form-row">  
+                            <div class="col-6">               
+                                <div class="form-group col-12">
+                                    <label class="label">First Name</label>
+                                    {{ form_row(form.pFirstName) }}
+                                </div>
+                            </div>    
+                            <div class="form-group col-md-6">
+                                <label class="label">Last Name</label>
+                                {{ form_row(form.pLastName) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="label">Date of Birth</label>
+                                {{ form_row(form.pDOB) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="label">Patient Height</label>
+                                {{ form_row(form.pHeight) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="label">Patient Weight</label>
+                                {{ form_row(form.pWeight) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="label">Gender</label>
+                                {{ form_row(form.pGender) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Phone Number</label>
+                                {{ form_row(form.pPhoneNumber) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="label">Address</label>
+                                {{ form_row(form.pAddress) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="label">Emergency Contact</label>
+                                {{ form_row(form.pEmergencyContactDetails) }}
+                            </div>
+                        </div>
+                        <hr>
+                        <h4 class="title">Medical Information</h4>
+                        <hr>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="label">Medical Histroy</label>
+                                {{ form_row(form.pMedicalHistroy) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="label">Surgical Histroy</label>
+                                {{ form_row(form.pSurgicalHistroy) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="label">Allergic Histroy</label>
+                                {{ form_row(form.pAllergicHistroy) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="label">Drug Histroy</label>
+                                {{ form_row(form.pDrugHistroy) }}
+                            </div>
+                        </div>
+                        <hr>
+                        <h4 class="title">Other Information</h4>
+                        <hr>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="label">Visiting Number</label>
+                                {{ form_row(form.pVisitingNumber) }}
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label class="label">Social Histroy</label>
+                                {{ form_row(form.pSocialHistroy) }}
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label class="label">Exam Details</label>
+                                {{ form_row(form.pExaminationDetails) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Current Location</label>
+                                {{ form_row(form.pCurrentLocation) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Status</label>
+                                {{ form_row(form.pStatus) }}
+                            </div>
+                        </div>
+                        
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                    </div>
+                </div>     
+            </div>
+        </div>
+    </div>
+</section>

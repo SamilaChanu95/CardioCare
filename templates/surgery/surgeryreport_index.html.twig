@@ -1,0 +1,37 @@
+<section class="ftco-section">
+    {% if surgeries %}           
+        <table class="table table-hover table-responsive table-borderless">
+            <thead>
+                <tr class="table">
+                    <th scope="col"><p>Surgery Name</p></th>
+                    <th scope="col"><p>Surgery Priority</p></th>
+                    <th scope="col"><p>Patient Name</p></th>
+                    <th scope="col"><p>Doctor Name</p></th>
+                    <th scope="col"><p>Nurse Name</p></th>
+                    <th scope="col"><p>Consultant Name</p></th>
+                    <th scope="col"><p>Technician Name</p></th>
+                    <th scope="col"><p>Surgery Time</p></th>
+                    <th scope="col"><p>Surgery Date</p></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for surgery in surgeries %}
+                    <tr>
+                        <td><h7><a href="surgery/edit/{{ surgery.id }}">{{  surgery.SurgeryName }}</a></h7></td>
+                        <td><p>{{ surgery.Priority }}</p></td>
+                        <td><p>{{ surgery.Patient }}</p></td>
+                        <td><p>{{ surgery.Doctor }}</p></td>
+                        <td><p>{{ surgery.Nurse }}</p></td>
+                        <td><p>{{ surgery.Consultant }}</p></td>
+                        <td><p>{{ surgery.Technician }}</p></td>
+                        <td><p>{{ surgery.time|date('H:i:s') }}</p></td>
+                        <td><p>{{  surgery.date|date('d-m-Y') }}</p></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>          
+    {% else %}
+    <p align="center">No surgeries to display.</p>
+    {% endif %}
+    <p align="center" class="button-custom"><a href="/surgery/add" class="btn btn-secondary py-2 px-3">Add new Surgery</a></p>
+</section>

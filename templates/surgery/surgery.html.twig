@@ -52,96 +52,11 @@
                             {% endif %}
                         </div>
                     </div>
+
                     <!-- Sidebar Menu -->
-                    <nav class="mt-2">
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                            <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-                            <li class="nav-item has-treeview">
-                                <a href="/" class="nav-link">
-                                <i class="nav-icon fas fa-home"></i>
-                                    <p>Home</p>
-                                </a>
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="/clinic" class="nav-link">
-                                    <i class="nav-icon fas fa-stethoscope"></i>
-                                    <p>Clinic</p>
-                                </a>
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-clinic-medical"></i>
-                                    <p>Ward Addmission<i class="right fas fa-angle-left"></i></p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <div class="container1">
-                                            <a href="/patient" class="nav-link">
-                                            <i class="nav-icon fas fa-user-injured"></i>
-                                                <p>Patients</p>
-                                            </a>
-                                        </div>    
-                                    </li>
-                                    <li class="nav-item">
-                                        <div class="container1">
-                                            <a href="/doctor" class="nav-link">
-                                            <i class="nav-icon fas fa-user-md"></i>
-                                                <p>Doctors</p>
-                                            </a>
-                                        </div>    
-                                    </li>
-                                    <li class="nav-item">
-                                        <div class="container1">
-                                            <a href="/nurse" class="nav-link">
-                                            <i class="nav-icon fas fa-user-nurse"></i>
-                                                <p>Nurses</p>
-                                            </a>
-                                        </div>    
-                                    </li>
-                                    <li class="nav-item">
-                                        <div class="container1">
-                                            <a href="/consultant" class="nav-link">
-                                            <i class="nav-icon fas fa-user-tie"></i>
-                                                <p>Consultants</p>
-                                            </a>
-                                        </div>    
-                                    </li>
-                                    <li class="nav-item">
-                                        <div class="container1">
-                                            <a href="/technician" class="nav-link">
-                                            <i class="nav-icon fas fa-user"></i>
-                                                <p>Technicians</p>
-                                            </a>
-                                        </div>    
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="/icu" class="nav-link">
-                                    <i class="nav-icon fas fa-procedures"></i>
-                                    <p>ICU</p>
-                                </a>
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="/surgery" class="nav-link active">
-                                    <i class="nav-icon fas fa-syringe"></i>
-                                    <p>Surgery</p>
-                                </a>
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="/discharge" class="nav-link">
-                                    <i class="nav-icon far fa-plus-square"></i>
-                                    <p>Discharge</p>
-                                </a>   
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="{{ path('logout') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-sign-out-alt"></i>
-                                    <p>Logout</p>
-                                </a>   
-                            </li>
-                        </ul>
-                    </nav>
+                    {% include "surgery/sidebar.html.twig" %}
+                    <!-- /.sidebar-menu -->
+
                     <!-- /.sidebar-menu -->
                 </div>
                 <!-- /.sidebar -->
@@ -149,7 +64,8 @@
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
-                <div class="content-header">                 
+                <div class="content-header"> 
+
                     {% include "page_header_nav.html.twig" %}                   
     
                     <section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_18.jpg') }}');" data-stellar-background-ratio="0.5">
@@ -163,43 +79,7 @@
                         </div>
                     </section>
 		
-                    <section class="ftco-section">
-                    {% if patients %} 
-                        <table class="table table-hover table-avatar table-valign-middle table-head-fixed table-responsive-xl">
-                            <thead>
-                                <tr class="table">
-                                    <th scope="col"><p>Patient Name</p></th>
-                                    <th scope="col"><p>Patient Address</p></th>
-                                    <th scope="col"><p>Gender</p></th>
-                                    <th scope="col"><p>Date of Birth</p></th>
-                                    <th scope="col"><p>Phone Number</p></th>
-                                    <th scope="col"><p>Emergency Contact Details</p></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for patient in patients %}
-                                    {% if patient.getPatientType() == "In Patient" %}
-                                        {% if patient.getPCurrentLocation() == "Operating Theater" or patient.getPCurrentLocation() == "Ward" %}
-                                            {% if patient.getPStatus() == "Active" %} 
-                                                <tr>
-                                                    <td><h7><a href="/surgery/patient/edit/{{ patient.id }}">{{  patient.pFirstName }} {{  patient.pLastName }}</a></h7></td>
-                                                    <td><p>{{ patient.pAddress }}</p></td>
-                                                    <td><p>{{ patient.pGender }}</p></td>
-                                                    <td><p>{{ patient.pDOB }}</p></td>
-                                                    <td><p>{{ patient.pPhoneNumber }}</p></td>
-                                                    <td><p>{{ patient.pEmergencyContactDetails }}</p></td>
-                                                </tr>
-                                            {% endif %}    
-                                        {% endif %}        
-                                    {% endif %}
-                                {% endfor %}    
-                            </tbody>
-                        </table>            
-                        {% else %}
-                            <p align="center">No surgical patients to display.</p>
-                        {% endif %}
-                            <p align="center" class="button-custom"><a href="/surgery/patient/add" class="btn btn-secondary py-2 px-3">Add new Surgical Patient</a></p>
-                    </section>
+                    {% include "surgery/surgerypatient_index.html.twig" %}
 
                     <section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_7.jpg') }}');" data-stellar-background-ratio="0.5">
                     <div class="overlay"></div>
@@ -212,44 +92,7 @@
                     </div>
                     </section>
 		
-                    <section class="ftco-section">
-                    {% if surgeries %}           
-                        <table class="table table-hover table-responsive table-borderless">
-                            <thead>
-                                <tr class="table">
-                                    <th scope="col"><p>Surgery Name</p></th>
-                                    <th scope="col"><p>Surgery Priority</p></th>
-                                    <th scope="col"><p>Patient Name</p></th>
-                                    <th scope="col"><p>Doctor Name</p></th>
-                                    <th scope="col"><p>Nurse Name</p></th>
-                                    <th scope="col"><p>Consultant Name</p></th>
-                                    <th scope="col"><p>Technician Name</p></th>
-                                    <th scope="col"><p>Surgery Time</p></th>
-                                    <th scope="col"><p>Surgery Date</p></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for surgery in surgeries %}
-                                    <tr>
-                                        <td><h7><a href="surgery/edit/{{ surgery.id }}">{{  surgery.SurgeryName }}</a></h7></td>
-                                        <td><p>{{ surgery.Priority }}</p></td>
-                                        <td><p>{{ surgery.Patient }}</p></td>
-                                        <td><p>{{ surgery.Doctor }}</p></td>
-                                        <td><p>{{ surgery.Nurse }}</p></td>
-                                        <td><p>{{ surgery.Consultant }}</p></td>
-                                        <td><p>{{ surgery.Technician }}</p></td>
-                                        <td><p>{{ surgery.time|date('H:i:s') }}</p></td>
-                                        <td><p>{{  surgery.date|date('d-m-Y') }}</p></td>
-                                    </tr>
-
-                                {% endfor %}
-                            </tbody>
-                        </table>          
-                    {% else %}
-                        <p align="center">No surgeries to display.</p>
-                    {% endif %}
-                        <p align="center" class="button-custom"><a href="/surgery/add" class="btn btn-secondary py-2 px-3">Add new Surgery</a></p>
-                    </section>
+                    {% include "surgery/surgeryreport_index.html.twig" %}
 
                     {% include "footer.html.twig" %}
 

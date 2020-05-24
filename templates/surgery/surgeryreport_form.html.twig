@@ -1,0 +1,109 @@
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('images/bg_7.jpg') }}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h2 class="breadcrumb-item"><b>Surgery's details</b></h2>
+            </div>
+        </div>
+    </div>
+</section>
+		
+<section class="ftco-section">
+	<div class="container1">
+        <div class="card card-4">
+            <div class="card-body">
+                <h4 class="title">Surgery Information</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 m-md-auto ftco-animate">	   
+                    {{ form_start(form) }}  
+                        <div class="form-row">  
+                            <div class="form-group col-md-9">
+                                <label class="label">Name of Surgery</label>
+                                {{ form_row(form.SurgeryName) }}
+                            </div> 
+                            <div class="form-group col-md-3">
+                                <label class="label">Priority of Surgery</label>
+                                {{ form_row(form.priority) }}
+                            </div>    
+                        </div>
+                        <div class="form-row">             
+                            <div class="form-group col-md-6">
+                                <label class="label">Name of Patient</label>
+                                {{ form_row(form.Patient) }}
+                            </div>    
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="label">Head of the Doctor</label>
+                                {{ form_row(form.DoctorMain) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Assistant Doctor</label>
+                                {{ form_row(form.DoctorFAssistant) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Doctor Anaesthetist</label>
+                                {{ form_row(form.DoctorSAssistant) }}
+                            </div>
+                        </div> 
+                        <div class="form-row">   
+                            <div class="form-group col-md-3">
+                                <label class="label">Head of the Nurse</label>
+                                {{ form_row(form.NurseMain) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Assistant Doctor</label>
+                                {{ form_row(form.NurseFAssistant) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Assistant Doctor</label>
+                                {{ form_row(form.NurseSAssistant) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Nurse Anaesthetist</label>
+                                {{ form_row(form.NurseTAssistant) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="label">Head of the Consultant</label>
+                                {{ form_row(form.ConsultantMain) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Assistant Cosultant</label>
+                                {{ form_row(form.ConsultantAssistant) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="label">Head of the Technician</label>
+                                {{ form_row(form.TechnicianMain) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="label">Assistant Technician</label>
+                                {{ form_row(form.TechnicianAssistant) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Surgery Time</label>
+                                {{ form_row(form.time) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="label">Surgery Date</label>
+                                {{ form_row(form.date) }}
+                            </div>
+                        </div>    
+                        
+                        {{ form_widget(form) }}
+                        {{ form_end(form) }}
+                    </div>
+                </div>     
+            </div>
+        </div>
+    </div>
+</section>

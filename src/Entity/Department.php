@@ -53,6 +53,12 @@ class Department
      */
     private $wards;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Hospital", inversedBy="departments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $hospital;
+
     public function __construct()
     {
         $this->nurses = new ArrayCollection();
@@ -62,7 +68,7 @@ class Department
         $this->units = new ArrayCollection();
         $this->wards = new ArrayCollection();
     }
-
+   
     public function getId(): ?int
     {
         return $this->id;
@@ -267,6 +273,18 @@ class Department
                 $ward->setDepartment(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHospital(): ?Hospital
+    {
+        return $this->hospital;
+    }
+
+    public function setHospital(?Hospital $hospital): self
+    {
+        $this->hospital = $hospital;
 
         return $this;
     }

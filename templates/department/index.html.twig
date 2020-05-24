@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Department index{% endblock %}
+
+{% block body %}
+    <section class="ftco-section">
+        {% if departments %}
+        <div class="container">
+            <div class="row">
+                {% for department in departments %}
+                <div class="col-md-6 col-lg-3 ftco-animate">
+                    <div class="staff">  
+                        <div class="text pt-3 text-center">
+                            <h3><a href="{{ path('department_show',{'id': department.id })}}">{{  department.Name }}</a></h3>
+                            <div class="faded">
+                                <p>{{  department.Name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p align="center">No department to display.</p>
+        {% endif %}
+        <p align="center" class="button-custom"><a href="{{path('department_add')}}" class="btn btn-secondary py-2 px-3">Add new Department</a></p>    
+    </section>
+{% endblock %}
+
+

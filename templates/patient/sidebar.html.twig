@@ -1,0 +1,137 @@
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+        <li class="nav-item has-treeview">
+            <a href="/" class="nav-link">
+            <i class="nav-icon fas fa-home"></i>
+                <p>Home</p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="/clinic" class="nav-link">
+                <i class="nav-icon fas fa-stethoscope"></i>
+                <p>Clinic</p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-clinic-medical"></i>
+                <p>Ward Addmission<i class="right fas fa-angle-left"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <div class="container1">
+                        <a href="/patient" class="nav-link active">
+                        <i class="nav-icon fas fa-user-injured"></i>
+                            <p>Patients</p>
+                        </a>
+                    </div>    
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="/icu" class="nav-link">
+                <i class="nav-icon fas fa-procedures"></i>
+                <p>ICU</p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="/surgery" class="nav-link">
+                <i class="nav-icon fas fa-syringe"></i>
+                <p>Surgery</p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="/discharge" class="nav-link">
+                <i class="nav-icon far fa-plus-square"></i>
+                <p>Discharge</p>
+            </a>   
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="/clinic" class="nav-link">
+                <i class="nav-icon fas fa-cogs"></i>
+                <p>Settings <i class="right fas fa-angle-left"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <div class="container1">
+                        <a href="/hospital" class="nav-link">
+                            <i class="nav-icon fa fa-building"></i>
+                            <p>Hospital</p>
+                        </a>
+                    </div>    
+                </li>
+                 <li class="nav-item">
+                    <div class="container1">
+                        <a href="{{path('department_index')}}" class="nav-link">
+                            <i class="nav-icon fa fa-building"></i>
+                            <p>Department</p>
+                        </a>
+                    </div>    
+                </li>
+                 <li class="nav-item">
+                    <div class="container1">
+                        <a href="/unit" class="nav-link ">
+                            <i class="nav-icon fa fa-building"></i>
+                            <p>Unit</p>
+                        </a>
+                    </div>    
+                </li>
+                <li class="nav-item">
+                    <div class="container1">
+                        <a href="/ward" class="nav-link ">
+                            <i class="nav-icon fa fa-building"></i>
+                            <p>Ward</p>
+                        </a>
+                    </div>    
+                </li>
+                <li class="nav-item">
+                    <div class="container1">
+                        <a href="/patient" class="nav-link active">
+                            <i class="nav-icon fas fa-user-injured"></i>
+                            <p>Patients</p>
+                        </a>
+                    </div>    
+                </li>
+                <li class="nav-item">
+                    <div class="container1">
+                        <a href="/doctor" class="nav-link">
+                        <i class="nav-icon fas fa-user-md"></i>
+                            <p>Doctors</p>
+                        </a>
+                    </div>    
+                </li>
+                <li class="nav-item">
+                    <div class="container1">
+                        <a href="/nurse" class="nav-link">
+                            <i class="nav-icon fas fa-user-nurse"></i>
+                            <p>Nurses</p>
+                        </a>
+                    </div>    
+                </li>
+                <li class="nav-item">
+                    <div class="container1">
+                        <a href="/consultant" class="nav-link">
+                            <i class="nav-icon fas fa-user-tie"></i>
+                            <p>Consultants</p>
+                        </a>
+                    </div>    
+                </li>
+                <li class="nav-item">
+                    <div class="container1">
+                        <a href="/technician" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                            <p>Technicians</p>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="{{ path('logout') }}" class="nav-link">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>Logout</p>
+            </a>   
+        </li>
+    </ul>
+</nav>

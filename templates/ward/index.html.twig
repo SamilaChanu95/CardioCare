@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ward index{% endblock %}
+
+{% block body %}
+    <section class="ftco-section">
+        {% if wards %}
+        <div class="container">
+            <div class="row">
+                {% for ward in wards %}
+                <div class="col-md-6 col-lg-3 ftco-animate">
+                    <div class="staff">  
+                        <div class="text pt-3 text-center">
+                            <h3><a href="{{ path('ward_show',{'id': ward.id })}}">{{  ward.WardName }}</a></h3>
+                            <div class="faded">
+                                <p>{{  ward.Hospital }}</p>
+                                <p>{{  ward.Department }}</p>
+                                <p>{{  ward.Unit }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p align="center">No wards to display.</p>
+        {% endif %}
+        <p align="center" class="button-custom"><a href="{{path('ward_add')}}" class="btn btn-secondary py-2 px-3">Add new Ward</a></p>    
+    </section>
+{% endblock %}

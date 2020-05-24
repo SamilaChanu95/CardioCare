@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\ICU;
+use App\Form\ICUType;
 use App\Entity\Patient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,10 +18,13 @@ use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @Route("/icu")
+ */
 class ICUController extends AbstractController
 {
     /**
-     * @Route("/icu", name="icu_reports_list")
+     * @Route("/", name="icu_reports_list")
      */
     public function displayICU()
     {
@@ -35,57 +40,16 @@ class ICUController extends AbstractController
 
 
     /**
-     * @Route("/icu/add", name="icu_report_add")
+     * @Route("/add", name="icureport_add", methods={"GET","POST"})
      */
     public function createICUReport(Request $request)
     {
         $icureport = new ICU();
-
-        $form = $this->createFormBuilder($icureport)
-            ->add('Patient', EntityType::class, array(
-                'class' => Patient::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->Where('u.pStatus = :val1') 
-                        ->andWhere('u.pCurrentLocation != :val2')
-                        ->setParameters(array('val1' => "Active" , 'val2' => "Clinic"));   
-                }, 
-                'required' => true,'label' => 'Patient Name','attr' => array('class' => 'form-control')))
-            ->add('AdmitDate', DateType::class, array('required' => true, 'html5' => false, 'label' => 'Admit Date'))
-            ->add('Room', TextType::class, array('required' => true,'label' => "Patient's Room",'attr' => array('class' => 'form-control')))
-            ->add('Code', TextType::class, array('required' => true,'label' => 'Code','attr' => array('class' => 'form-control')))
-            ->add('Diagnosis', TextareaType::class, array('required' => true,'label' => 'Diagnosies','attr' => array('class' => 'form-control')))
-            ->add('Neuro', TextareaType::class, array('required' => true,'label' => 'Neuro','attr' => array('class' => 'form-control')))
-            ->add('Cardiac', TextareaType::class, array('required' => true,'label' => 'Cardiac','attr' => array('class' => 'form-control')))
-            ->add('Respiratory', TextareaType::class, array('required' => true,'label' => 'Respiratory','attr' => array('class' => 'form-control')))
-            ->add('Ventilator', TextareaType::class, array('required' => true,'label' => 'Ventilator','attr' => array('class' => 'form-control')))
-            ->add('GI', TextareaType::class, array('required' => true,'label' => 'GI','attr' => array('class' => 'form-control')))
-            ->add('GU', TextareaType::class, array('required' => true,'label' => 'GU','attr' => array('class' => 'form-control')))
-            ->add('Skin', TextareaType::class, array('required' => true,'label' => 'Skin','attr' => array('class' => 'form-control')))
-            ->add('Drains', TextareaType::class, array('required' => true,'label' => 'Drains', 'attr' => array('class' => 'form-control')))
-            ->add('Labs', TextareaType::class, array('required' => false,'label' => 'Labs', 'attr' => array('class' => 'form-control')))
-            ->add('Meds', TextareaType::class, array('required' => false,'label' => 'Meds', 'attr' => array('class' => 'form-control')))
-            ->add('Hemodynamics', TextareaType::class, array('required' => false,'label' => 'Hemodynamics', 'attr' => array('class' => 'form-control')))
-            ->add('ToDo', TextareaType::class, array('required' => false,'label' => 'ToDo', 'attr' => array('class' => 'form-control')))
-            ->add('CoreMeasures', TextareaType::class, array('required' => false,'label' => 'CoreMeasures', 'attr' => array('class' => 'form-control')))
-            ->add('captchaCode', CaptchaType::class, array(
-                'captchaConfig' => 'ExampleCaptchaUserRegistration',
-                'label' => 'Retype the characters from the picture',
-                'constraints' => [
-                    new ValidCaptcha ([
-                        'message' => 'Invalid captcha, please try again',
-                    ]),
-                ],
-            ))
-            ->add('submit', SubmitType::class, array('label'=> 'Create', 'attr' => array('class' => 'btn btn-primary mt-3')))
-            ->getForm();
-
+        $form = $this->createForm(ICUType::class, $icureport,['edit_mode' => false,]);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
         {
-            $icureport = $form->getData();
-             
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($icureport);
             $entityManager->flush(); 
@@ -93,67 +57,56 @@ class ICUController extends AbstractController
             return $this->redirectToRoute('icu_reports_list');
         }
 
-        return $this->render('icu/icureport_add.html.twig', [
-            'form' => $form->createView()
+        return $this->render('icu/icureport_new.html.twig', [
+            'icureport' => $icureport,
+            'form' => $form->createView(),
         ]);
 
     }
 
     /**
-     * @Route("/icu/edit/{id}", name="icu_report_edit")
+     * @Route("/{id}", name="icureport_show", methods={"GET"})
      */
-    public function editICUReport(Request $request,$id)
+    public function show(ICU $icureport): Response
     {
-        $icureport = new ICU();
+        return $this->render('icu/icureport_show.html.twig', [
+            'icureport' => $icureport,
+        ]);
+    }
 
-        $icureport = $this->getDoctrine()->getRepository(ICU::class)->find($id);
-
-        $form = $this->createFormBuilder($icureport)
-            ->add('Patient', EntityType::class, array('class' => Patient::class, 'required' => true,'label' => 'Patient Name','attr' => array('class' => 'form-control')))
-            ->add('AdmitDate', DateType::class, array('required' => true, 'html5' => false, 'label' => 'Admit Date'))
-            ->add('Room', TextType::class, array('required' => true,'label' => "Patient's Room",'attr' => array('class' => 'form-control')))
-            ->add('Code', TextType::class, array('required' => true,'label' => 'Code','attr' => array('class' => 'form-control')))
-            ->add('Diagnosis', TextareaType::class, array('required' => true,'label' => 'Diagnosies','attr' => array('class' => 'form-control')))
-            ->add('Neuro', TextareaType::class, array('required' => true,'label' => 'Neuro','attr' => array('class' => 'form-control')))
-            ->add('Cardiac', TextareaType::class, array('required' => true,'label' => 'Cardiac','attr' => array('class' => 'form-control')))
-            ->add('Respiratory', TextareaType::class, array('required' => true,'label' => 'Respiratory','attr' => array('class' => 'form-control')))
-            ->add('Ventilator', TextareaType::class, array('required' => true,'label' => 'Ventilator','attr' => array('class' => 'form-control')))
-            ->add('GI', TextareaType::class, array('required' => true,'label' => 'GI','attr' => array('class' => 'form-control')))
-            ->add('GU', TextareaType::class, array('required' => true,'label' => 'GU','attr' => array('class' => 'form-control')))
-            ->add('Skin', TextareaType::class, array('required' => true,'label' => 'Skin','attr' => array('class' => 'form-control')))
-            ->add('Drains', TextareaType::class, array('required' => true,'label' => 'Drains', 'attr' => array('class' => 'form-control')))
-            ->add('Labs', TextareaType::class, array('required' => false,'label' => 'Labs', 'attr' => array('class' => 'form-control')))
-            ->add('Meds', TextareaType::class, array('required' => false,'label' => 'Meds', 'attr' => array('class' => 'form-control')))
-            ->add('Hemodynamics', TextareaType::class, array('required' => false,'label' => 'Hemodynamics', 'attr' => array('class' => 'form-control')))
-            ->add('ToDo', TextareaType::class, array('required' => false,'label' => 'ToDo', 'attr' => array('class' => 'form-control')))
-            ->add('CoreMeasures', TextareaType::class, array('required' => false,'label' => 'CoreMeasures', 'attr' => array('class' => 'form-control')))
-            ->add('captchaCode', CaptchaType::class, array(
-                'captchaConfig' => 'ExampleCaptchaUserRegistration',
-                'label' => 'Retype the characters from the picture',
-                'constraints' => [
-                    new ValidCaptcha ([
-                        'message' => 'Invalid captcha, please try again',
-                    ]),
-                ],
-            ))
-            ->add('submit', SubmitType::class, array('label'=> 'Update', 'attr' => array('class' => 'btn btn-primary mt-3')))
-            ->getForm();
-
+    /**
+     * @Route("/{id}/edit", name="icureport_edit", methods={"GET","POST"})
+     */
+    public function editICUReport(Request $request,ICU $icureport)
+    {
+        $form = $this->createForm(ICUType::class, $icureport,['edit_mode' => true,]);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
-        {
-           
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush(); 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('icu_reports_list');
         }
 
-        return $this->render('icu/icureport_edit.html.twig', [
-            'form' => $form->createView()
+        return $this->render('icu/icureport_new.html.twig', [
+            'icu' => $icureport,
+            'form' => $form->createView(),
         ]);
+        
+    }
 
+    /**
+     * @Route("/{id}", name="icureport_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, ICU $icureport): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$icureport->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($icureport);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('icu_reports_list');
     }
 
 

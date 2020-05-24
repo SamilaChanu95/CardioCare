@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Unit index{% endblock %}
+
+{% block body %}
+    <section class="ftco-section">
+        {% if units %}
+        <div class="container">
+            <div class="row">
+                {% for unit in units %}
+                <div class="col-md-6 col-lg-3 ftco-animate">
+                    <div class="staff">  
+                        <div class="text pt-3 text-center">
+                            <h3><a href="{{ path('unit_show',{'id': unit.id })}}">{{  unit.UnitName }}</a></h3>
+                            <div class="faded">
+                                <p>{{  unit.Hospital }}</p>
+                                <p>{{  unit.Department }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p align="center">No units to display.</p>
+        {% endif %}
+        <p align="center" class="button-custom"><a href="{{path('unit_add')}}" class="btn btn-secondary py-2 px-3">Add new Unit</a></p>    
+    </section>
+{% endblock %}
+
+    
